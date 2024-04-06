@@ -1,0 +1,82 @@
+até 2 de abril o path loss era
+media 6, stddev 6
+
+dia 2 de abril ----- tirar destas execuções o valor 16.52 inicial (ha uma ou outra que nao tem isto)
+das 11:20-11:38
+11:39- 12:02
+12:03- 12:25
+12:16- 12:45
+12:52- 13:03 (confirmar final)
+13:14- 13:34
+
+
+até as 13:35 o path loss era
+media 12, stddev 6
+
+
+
+
+
+das 14:55 - 14:55 USELESS TEST
+14:58- 15:17
+15:21- 15:41
+15:44 - 15:48 (lixo)
+
+
+até as __:__ o path loss é
+media 24, stddev 6
+
+
+PARA CIMA TUDO LIXO
+
+
+
+!começa aqui:!
+
+------------mean 12 stddev 6------------
+com mean 12 stddev 6
+16:04- 16.24
+16:27- 16:47
+16:49- 17:09
+17:11- 17:33 (coisas para tirar)
+17:35- 17:55
+\
+
+
+11:19-11:40
+
+
+------------mean 24 stddev 3------------
+com mean 24 stddev 3
+11:44- 12:04
+14:37- 14:57
+
+
+\
+11:16- 11:36
+11:38- 11:58
+
+
+
+A PARTIR DAQUI COM V2 (ACHO QUE E O CORRETO) --- USING 10M on iPerf3
+TIRAR DUAS HORAS DOS CHATS (DIFERENÇAS HORARIO)
+------------mean 12 stddev 3------------  
+12:03- 12:23
+12:25- 12:45
+12:48- 13:08
+13:10- 13:29
+14:38- 14:58
+15:00- 15:20
+
+------------mean 24 stddev 3------------
+15:22- 15:42
+15:44- 16:05
+16:07- 16:27
+16:48- 17:07
+17:09- 17:29
+
+
+
+
+
+

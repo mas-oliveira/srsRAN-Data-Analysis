@@ -1,7 +1,7 @@
 import pandas as pd
 import json as jason
 
-import srsRAN_data_treatment, srsRAN_plots, srsRAN_data_analysis
+import srsRAN_data_treatment, srsRAN_plots, srsRAN_data_analysis, srsRAN_debug
  
 """
     Plot variable
@@ -25,7 +25,16 @@ NR_TESTS = 6
     ALL_TESTS
     This variable choose if you want to do the plot of every tests or if you want to plot test by test.
 """
-ALL_TESTS = True
+ALL_TESTS = False
+
+"""
+    Plot variable
+    MULTI_TEST
+    This variable while on will work with ALL data from ALL tests present in the dataframe.
+    The difference between this and the ALL_TESTS variable is that this one will join info of all the path
+        loss distributions, while the ALL_TESTS will only care about the tests of a single path loss distribution.
+"""
+MULTI_TEST = True
 
 """
     Plot variable
@@ -35,9 +44,9 @@ ALL_TESTS = True
 TEST_NR = '1_test'
 
 PLOTS = False
-MLAI = True
+PRE_MLAI = False
 
-CORRELATION = True
+CORRELATION = False
 
 def kpm_load():
     return pd.read_pickle('./pickles/srsran_kpms/df_kpms.pkl')
@@ -75,14 +84,16 @@ def main():
             filtered_df_iperf = srsRAN_data_treatment.filter_dataframe_by_test(df_iperf, PATH_LOSS_DISTRIBUTION, TEST_NR, timestamps_filter)
             filtered_df_latency = srsRAN_data_treatment.filter_dataframe_by_test(df_latency, PATH_LOSS_DISTRIBUTION, TEST_NR, timestamps_filter)
             srsRAN_plots.kpm_plot_single_test(filtered_df_kpm, filtered_df_iperf, filtered_df_latency)
+        if MULTI_TEST:
+            pass
 
-    if MLAI:
+    if PRE_MLAI:
         if CORRELATION:
             df_corr = srsRAN_data_treatment.prepare_dfs_correlation(df_iperf, df_kpm, df_latency)
             """write_csv (df_corr, 'before_drop')
             df_corr = df_corr.dropna()
             write_csv (df_corr, 'after_drop')"""
-            print(df_corr)
+            #print(df_corr)
             srsRAN_data_analysis.correlation_matrix(df_corr)
 
 if __name__ == "__main__":

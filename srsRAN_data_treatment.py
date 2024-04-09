@@ -21,14 +21,44 @@ def get_df_collection(df, pl_dist, nr_tests, timestamps):
         end_timestamp = timestamps[pl_dist][f'{test_i}_test']['end']
         df_list.append(filter_dataframe_by_timestamps(df, start_timestamp, end_timestamp))
     return df_list
+    
+def custom_agg_mean(df):
+    # Hope that this is a temp function
+    # Just need the columns that we know that this will happen. The KPMs are always the last so we don't need to make anything to them
+    agg_columns = ['bitrate', 'jitter', 'lost_percentage', 'path_loss', 'transfer', 'time_latency']
+    df[agg_columns] = df[agg_columns].apply(pd.to_numeric, errors='coerce')
+
+    accumulated_values = {col: [] for col in agg_columns}
+
+    for index, row in df.iterrows():
+        if row.notnull().all():
+            for col in agg_columns:
+                if accumulated_values[col]:
+                    mean_values = sum(accumulated_values[col]) / len(accumulated_values[col])
+                    df.loc[index, col] = mean_values
+                else:
+                    df.loc[index, col] = None
+            accumulated_values = {col: [] for col in agg_columns}
+        else:
+            for col in agg_columns:
+                if pd.notnull(row[col]):
+                    accumulated_values[col].append(row[col])
+    
+    df = df.dropna()
+    # Maybe after we can see if the number of ue has some impact via the correlations
+    df = df.drop(columns=['ue_id', '_time', 'seq_nr'])
+
+    srsRAN_debug.write_csv(df, 'after_cust_agg')
+    return df
+
 
 def prepare_dfs_correlation(df_kpm, df_iperf, df_latency):
     df_combined = pd.merge(df_kpm, df_iperf, on='_time', how='outer')
     df_combined = pd.merge(df_combined, df_latency, on='_time', how='outer')
+    df_combined['bandwidth_required'] = df_combined['bandwidth_required'].apply(lambda x: float(x.replace('M', '')) * 1000000 if isinstance(x, str) else x)
     srsRAN_debug.write_csv(df_combined, 'concat')
-     ### TROCAR ISTO POR UMA FORMA DE FICAR SO COM OS NUMEROS; ACHO QUE NAO FUNCIONA SO ASSIM
-    only_numeric_cols = df_combined.select_dtypes(include='number')##.drop(columns=['_field'], inplace=True)
-    return only_numeric_cols
+    df_combined = custom_agg_mean(df_combined)
+    return df_combined
 
 
 

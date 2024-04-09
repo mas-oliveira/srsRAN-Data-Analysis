@@ -76,17 +76,37 @@ def mean_by_tests(df_list, tests_info_dict):
     for category, dfs in dfs_by_category.items():
         mean_path_loss_values = []
         mean_RlcSduTransmittedVolumeUL_values = []
+        mean_UeThpUl_values = []
+        mean_bitrate_values = []
+        mean_jitter_values = []
+        mean_lost_percentage_values = []
+        mean_transfer_values = []
         
         for df in dfs:
             mean_path_loss_values.append(df['path_loss'].mean())
             mean_RlcSduTransmittedVolumeUL_values.append(df['DRB.RlcSduTransmittedVolumeUL'].mean())
+            mean_UeThpUl_values.append(df['DRB.UEThpUl'].mean())
+            mean_bitrate_values.append(df['bitrate'].mean())
+            mean_jitter_values.append(df['jitter'].mean())
+            mean_lost_percentage_values.append(df['lost_percentage'].mean())
+            mean_transfer_values.append(df['transfer'].mean())
         
         mean_path_loss = sum(mean_path_loss_values) / len(mean_path_loss_values)
         mean_RlcSduTransmittedVolumeUL = sum(mean_RlcSduTransmittedVolumeUL_values) / len(mean_RlcSduTransmittedVolumeUL_values)
-        
+        mean_UeThpUl_values = sum(mean_UeThpUl_values) / len(mean_UeThpUl_values)
+        mean_bitrate_values = sum(mean_bitrate_values) / len(mean_bitrate_values)
+        mean_jitter_values = sum(mean_jitter_values) / len(mean_jitter_values)
+        mean_lost_percentage_values = sum(mean_lost_percentage_values) / len(mean_lost_percentage_values)
+        mean_transfer_values = sum(mean_transfer_values) / len(mean_transfer_values)
+
         mean_values_by_category[category] = {
             'mean_path_loss': mean_path_loss,
-            'mean_RlcSduTransmittedVolumeUL': mean_RlcSduTransmittedVolumeUL
+            'mean_RlcSduTransmittedVolumeUL': mean_RlcSduTransmittedVolumeUL,
+            'mean_UeThpUl_values': mean_UeThpUl_values,
+            'mean_bitrate_values': mean_bitrate_values,
+            'mean_jitter_values': mean_jitter_values,
+            'mean_lost_percentage_values': mean_lost_percentage_values,
+            'mean_transfer_values': mean_transfer_values
         }
 
     # Print the mean values for each category
@@ -94,10 +114,11 @@ def mean_by_tests(df_list, tests_info_dict):
         print(f"Category: {category}")
         print(f"Mean path loss: {values['mean_path_loss']}")
         print(f"Mean DRB.RlcSduTransmittedVolumeUL: {values['mean_RlcSduTransmittedVolumeUL']}")
-
-        
-    
-    
+        print(f"Mean UeThp: {values['mean_UeThpUl_values']}")
+        print(f"Mean bitrate: {values['mean_bitrate_values']}")    
+        print(f"Mean jitter: {values['mean_jitter_values']}")    
+        print(f"Mean lost_percentage: {values['mean_lost_percentage_values']}")
+        print(f"Mean transfer_values: {values['mean_transfer_values']}")
         
 
 def plots_custom_agg_by_test(df_kpm_list, df_iperf_list, df_latency_list):

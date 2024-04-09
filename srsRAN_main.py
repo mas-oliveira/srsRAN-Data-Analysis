@@ -29,12 +29,19 @@ ALL_TESTS = False
 
 """
     Plot variable
+    SINGLE_TESTS
+    This variable should be True if you want to plot just a specific test of a distribution
+"""
+SINGLE_TESTS = False
+
+"""
+    Plot variable
     MULTI_TEST
     This variable while on will work with ALL data from ALL tests present in the dataframe.
     The difference between this and the ALL_TESTS variable is that this one will join info of all the path
         loss distributions, while the ALL_TESTS will only care about the tests of a single path loss distribution.
 """
-MULTI_TEST = True
+MULTI_TEST = False
 
 """
     Plot variable
@@ -43,8 +50,16 @@ MULTI_TEST = True
 """
 TEST_NR = '1_test'
 
-PLOTS = False
-PRE_MLAI = False
+PLOTS = True
+PRE_MLAI = True
+
+"""
+    Plot PRE ML/AI variable
+    MEAN_PLOTS_TESTS
+    This variable should be on if you want to see what's happening between the tests, most properly, to see 
+        the impact of changes in path loss.
+"""
+MEAN_PLOTS_TESTS = True
 
 CORRELATION = False
 
@@ -71,6 +86,8 @@ def main():
     df_iperf['_time'] = pd.to_datetime(df_iperf['_time'])
     df_latency['_time'] = pd.to_datetime(df_latency['_time'])
 
+    srsRAN_debug.write_csv(df_kpm, 'kpms')
+
     timestamps_filter = load_timestamps()
 
     if PLOTS: 
@@ -79,17 +96,42 @@ def main():
             filtered_df_iperf = srsRAN_data_treatment.get_df_collection(df_iperf, PATH_LOSS_DISTRIBUTION, NR_TESTS, timestamps_filter)
             filtered_df_latency = srsRAN_data_treatment.get_df_collection(df_latency, PATH_LOSS_DISTRIBUTION, NR_TESTS, timestamps_filter)
             srsRAN_plots.kpm_plot_all_tests_pl(filtered_df_kpm, filtered_df_iperf, filtered_df_latency, NR_TESTS)
-        else:
+        elif SINGLE_TESTS:
             filtered_df_kpm = srsRAN_data_treatment.filter_dataframe_by_test(df_kpm, PATH_LOSS_DISTRIBUTION, TEST_NR, timestamps_filter)
             filtered_df_iperf = srsRAN_data_treatment.filter_dataframe_by_test(df_iperf, PATH_LOSS_DISTRIBUTION, TEST_NR, timestamps_filter)
             filtered_df_latency = srsRAN_data_treatment.filter_dataframe_by_test(df_latency, PATH_LOSS_DISTRIBUTION, TEST_NR, timestamps_filter)
             srsRAN_plots.kpm_plot_single_test(filtered_df_kpm, filtered_df_iperf, filtered_df_latency)
         if MULTI_TEST:
-            pass
+            # tests_info_dict is a dictionary that will contain the available distributions and the number of tests
+            tests_info_dict = {distribution: {test: timestamps_filter[distribution][test] for test in timestamps_filter[distribution]} for distribution in timestamps_filter}
 
-    if PRE_MLAI:
+            filtered_df_kpm = srsRAN_data_treatment.get_df_multi_collection(df_kpm, tests_info_dict)
+            filtered_df_iperf = srsRAN_data_treatment.get_df_multi_collection(df_iperf, tests_info_dict)
+            filtered_df_latency = srsRAN_data_treatment.get_df_multi_collection(df_latency, tests_info_dict)
+            srsRAN_plots.kpm_plot_multi_tests_pl(filtered_df_kpm, filtered_df_iperf, filtered_df_latency)
+
+    if PRE_MLAI:   
+        #### See if makes sense to change the name of prepare_dfs_correlation to prepare_dfs_numeric_pre_mlai
+        if MEAN_PLOTS_TESTS:
+            #print(df_kpm)
+            #df_to_plot = srsRAN_data_treatment.prepare_dfs_correlation(df_iperf, df_kpm, df_latency, True)
+
+            tests_info_dict = {distribution: {test: timestamps_filter[distribution][test] for test in timestamps_filter[distribution]} for distribution in timestamps_filter}
+
+            filtered_df_kpm = srsRAN_data_treatment.get_df_multi_collection(df_kpm, tests_info_dict)
+            filtered_df_iperf = srsRAN_data_treatment.get_df_multi_collection(df_iperf, tests_info_dict)
+            filtered_df_latency = srsRAN_data_treatment.get_df_multi_collection(df_latency, tests_info_dict)
+            
+            df_agg_by_test = srsRAN_data_treatment.plots_custom_agg_by_test(filtered_df_kpm, filtered_df_iperf, filtered_df_latency)
+            #print(df_agg_by_test)
+            srsRAN_data_treatment.mean_by_tests(df_agg_by_test, tests_info_dict)
+            #srsRAN_debug.write_csv(df_to_plot, 'pre_plot_aiml')
+            #print(df_to_plot)
+
         if CORRELATION:
-            df_corr = srsRAN_data_treatment.prepare_dfs_correlation(df_iperf, df_kpm, df_latency)
+            df_corr = srsRAN_data_treatment.prepare_dfs_correlation(df_iperf, df_kpm, df_latency, False)
+            print("########## df_corr ##########")
+            print(df_corr)
             """write_csv (df_corr, 'before_drop')
             df_corr = df_corr.dropna()
             write_csv (df_corr, 'after_drop')"""

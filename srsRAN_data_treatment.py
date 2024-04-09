@@ -21,17 +21,165 @@ def get_df_collection(df, pl_dist, nr_tests, timestamps):
         end_timestamp = timestamps[pl_dist][f'{test_i}_test']['end']
         df_list.append(filter_dataframe_by_timestamps(df, start_timestamp, end_timestamp))
     return df_list
+
+def get_df_multi_collection(df, tests_info_dict):
+    df_list = []
+    for distribution, tests in tests_info_dict.items():
+        for test, timestamps in tests.items():
+            start_timestamp = timestamps['start']
+            end_timestamp = timestamps['end']
+            filtered_df = filter_dataframe_by_timestamps(df, start_timestamp, end_timestamp)
+            df_list.append(filtered_df)
+    """
+    counter = 0
+    for df in df_list:
+        counter = counter + df.shape[0]
+    print("kpms => ", counter)
+    """
+    return df_list
+
+def combine_dfs_by_test(df_kpm_list, df_iperf_list, df_latency_list):
+    combined_dfs = []
+    """total_kpms = 0
+
+    for df in df_kpm_list:
+        total_kpms = total_kpms + df.shape[0]
+    print("total kpms => ", total_kpms)"""
+    srsRAN_debug.write_list_csv(df_kpm_list, 'pre_kpm')
+    srsRAN_debug.write_list_csv(df_iperf_list, 'pre_iperf')
+    srsRAN_debug.write_list_csv(df_latency_list, 'pre_latency')
+    for df_kpm, df_iperf, df_latency in zip(df_kpm_list, df_iperf_list, df_latency_list):
+        df_combined = pd.merge(df_latency, df_iperf, on=['_time'], how='outer')
+        df_combined = pd.merge(df_combined, df_kpm, on=['_time'], how='outer')
+        combined_dfs.append(df_combined)
+    return combined_dfs
+
+def mean_by_tests(df_list, tests_info_dict):
+    num_tests_dict = {}
+
+    for key, value in tests_info_dict.items():
+        num_tests = len(value)
+        num_tests_dict[key] = num_tests
+
+    print(num_tests_dict)
+
+    dfs_by_category = {}
+    start_idx = 0
+
+    for category, num_tests in num_tests_dict.items():
+        end_idx = start_idx + num_tests
+        dfs_by_category[category] = df_list[start_idx:end_idx]
+        start_idx = end_idx
     
-def custom_agg_mean(df):
+    mean_values_by_category = {}
+
+    for category, dfs in dfs_by_category.items():
+        mean_path_loss_values = []
+        mean_RlcSduTransmittedVolumeUL_values = []
+        
+        for df in dfs:
+            mean_path_loss_values.append(df['path_loss'].mean())
+            mean_RlcSduTransmittedVolumeUL_values.append(df['DRB.RlcSduTransmittedVolumeUL'].mean())
+        
+        mean_path_loss = sum(mean_path_loss_values) / len(mean_path_loss_values)
+        mean_RlcSduTransmittedVolumeUL = sum(mean_RlcSduTransmittedVolumeUL_values) / len(mean_RlcSduTransmittedVolumeUL_values)
+        
+        mean_values_by_category[category] = {
+            'mean_path_loss': mean_path_loss,
+            'mean_RlcSduTransmittedVolumeUL': mean_RlcSduTransmittedVolumeUL
+        }
+
+    # Print the mean values for each category
+    for category, values in mean_values_by_category.items():
+        print(f"Category: {category}")
+        print(f"Mean path loss: {values['mean_path_loss']}")
+        print(f"Mean DRB.RlcSduTransmittedVolumeUL: {values['mean_RlcSduTransmittedVolumeUL']}")
+
+        
+    
+    
+        
+
+def plots_custom_agg_by_test(df_kpm_list, df_iperf_list, df_latency_list):
+    #TODO: Check if the values of beggining or end of the tests have influence in the final results, you know more or less what to expect..
+
+    kpm_columns = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.RlcPacketDropRateDl', 'DRB.RlcSduTransmittedVolumeDL', 'DRB.RlcSduTransmittedVolumeUL', 'DRB.UEThpDl', 'DRB.UEThpUl']
+    # Just need the columns that we know that this will happen. The KPMs are always the last so we don't need to make anything to them
+    agg_columns_iperf = ['bitrate', 'jitter', 'lost_percentage', 'path_loss', 'transfer']
+    agg_columns_latency = ['time_latency']
+
+    df_iperf_list = [df.assign(**{col: df[col].apply(pd.to_numeric, errors='coerce') for col in agg_columns_iperf}) for df in df_iperf_list]
+    df_latency_list = [df.assign(**{col: df[col].apply(pd.to_numeric, errors='coerce') for col in agg_columns_latency}) for df in df_latency_list]
+
+    accumulated_values = {col: [] for col in agg_columns_iperf+agg_columns_latency}
+    counter = 0
+
+    aggregated_times = []
+
+    processed_dfs = []
+    combined_df = combine_dfs_by_test(df_kpm_list, df_iperf_list, df_latency_list)
+    srsRAN_debug.write_list_csv(combined_df, 'pre_processed')
+    counter = 0
+    for df in combined_df:
+       # accumulated_values = {col: [] for col in agg_columns_iperf+agg_columns_latency}
+        # aggregated_times = []
+        
+        for index, row in df.iterrows():
+            if row[kpm_columns].notnull().any():
+                counter += 1
+                aggregated_times.append(row['_time'])
+                for col in agg_columns_iperf+agg_columns_latency:
+                    if accumulated_values[col]:
+                        mean_values = sum(accumulated_values[col]) / len(accumulated_values[col])
+                        df.loc[index, col] = round(mean_values,2)
+                    else:
+                        df.loc[index, col] = None
+                accumulated_values = {col: [] for col in agg_columns_iperf+agg_columns_latency}
+            else:
+                for col in agg_columns_iperf+agg_columns_latency:
+                    if pd.notnull(row[col]):
+                        accumulated_values[col].append(row[col])
+        
+        df = df[df['_time'].isin(aggregated_times)]
+        processed_dfs.append(df)
+
+    processed_dfs = [df.dropna() for df in processed_dfs]
+
+    srsRAN_debug.write_list_csv(processed_dfs, 'processed')
+
+    return processed_dfs
+
+    """df = df[df['_time'].isin(aggregated_times)]
+    
+    print("Count = ", counter)
+
+    df = df.dropna()
+    # Maybe after we can see if the number of ue has some impact via the correlations
+    df = df.drop(columns=['ue_id', 'seq_nr'])
+
+    #srsRAN_debug.write_csv(df, 'after_cust_agg')
+    return df"""
+
+    
+def custom_agg_mean(df, keep_time):
+    # TODO: Split by tests and just merge at the end ; Actual scenario --> All the tests together with this function
     # Hope that this is a temp function
     # Just need the columns that we know that this will happen. The KPMs are always the last so we don't need to make anything to them
+    kpm_columns = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.RlcPacketDropRateDl', 'DRB.RlcSduTransmittedVolumeDL', 'DRB.RlcSduTransmittedVolumeUL', 'DRB.UEThpDl', 'DRB.UEThpUl']
     agg_columns = ['bitrate', 'jitter', 'lost_percentage', 'path_loss', 'transfer', 'time_latency']
     df[agg_columns] = df[agg_columns].apply(pd.to_numeric, errors='coerce')
 
     accumulated_values = {col: [] for col in agg_columns}
+    counter = 0
+
+    if keep_time:
+        aggregated_times = []
 
     for index, row in df.iterrows():
-        if row.notnull().all():
+        if row[kpm_columns].notnull().any(): ### In the line only the KPMs must be present. The others can be obtain using the value of mean
+            counter = counter + 1
+            if keep_time:
+                aggregated_times.append(row['_time'])
             for col in agg_columns:
                 if accumulated_values[col]:
                     mean_values = sum(accumulated_values[col]) / len(accumulated_values[col])
@@ -43,21 +191,31 @@ def custom_agg_mean(df):
             for col in agg_columns:
                 if pd.notnull(row[col]):
                     accumulated_values[col].append(row[col])
+
+    if keep_time:
+        df = df[df['_time'].isin(aggregated_times)]
     
+    print("Count = ", counter)
+
     df = df.dropna()
     # Maybe after we can see if the number of ue has some impact via the correlations
-    df = df.drop(columns=['ue_id', '_time', 'seq_nr'])
+    if keep_time:
+        df = df.drop(columns=['ue_id', 'seq_nr'])
+    else:
+        df = df.drop(columns=['ue_id', '_time', 'seq_nr'])
 
-    srsRAN_debug.write_csv(df, 'after_cust_agg')
+    #srsRAN_debug.write_csv(df, 'after_cust_agg')
     return df
 
-
-def prepare_dfs_correlation(df_kpm, df_iperf, df_latency):
-    df_combined = pd.merge(df_kpm, df_iperf, on='_time', how='outer')
+def prepare_dfs_correlation(df_iperf, df_kpm, df_latency, keep_time):
+    df_kpm = df_kpm[df_kpm['DRB.RlcSduTransmittedVolumeUL'] > 5] ### To stay only with lines when test is running
+                                                                 ### This is just valid when you don't want to plot.
+    print(df_kpm.shape[0])
+    df_combined = pd.merge(df_iperf, df_kpm, on='_time', how='outer')
     df_combined = pd.merge(df_combined, df_latency, on='_time', how='outer')
     df_combined['bandwidth_required'] = df_combined['bandwidth_required'].apply(lambda x: float(x.replace('M', '')) * 1000000 if isinstance(x, str) else x)
     srsRAN_debug.write_csv(df_combined, 'concat')
-    df_combined = custom_agg_mean(df_combined)
+    df_combined = custom_agg_mean(df_combined, keep_time)
     return df_combined
 
 

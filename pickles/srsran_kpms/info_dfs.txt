@@ -1,0 +1,22 @@
+df_kpms.pkl
+df_iperf.pkl
+df_latency.pkl
+- This dataset group joins the first test setup of setting multiple path loss distributions during the multiple tests. The path loss distributions timestamps are defined in the timestamps.json. 
+- The tests were performed with 1 UE and KPM Format 1. BW gNB => 10 MHz and UE with NOF 52
+
+###############################################################################################
+
+df_kpms_fixed_pl_10.pkl    //    df_kpms_fixed_pl_90.pkl
+df_iperf_fixed_pl_10.pkl   //    df_iperf_fixed_pl_90.pkl
+df_latency_fixed_pl_10.pkl //    df_latency_fixed_pl_90.pkl 
+- This dataset group joins a group of tests made with the fixed value of Path Loss = 10/90dB. These table have now the test_number column, this way, timestamps.json is no longer needed.
+- The tests were performed with 1 UE and KPM Format 1. BW gNB => 10 MHz and UE with NOF 52
+
+###############################################################################################
+
+df_kpms_pl_10_f5.pkl      //     df_kpms_pl_10_f5.pkl
+df_iperf_pl_10_f5.pkl     //     df_iperf_pl_10_f5.pkl 
+df_latency_pl_10_f5.pkl   //     df_latency_pl_10_f5.pkl
+- This dataset group joins a group of tests made with the fixed value of Path Loss = 10/90dB. These table have now the test_number column, this way, timestamps.json is no longer needed.
+- The tests were performed with 3 UE and KPM Format 5. BW gNB => 10 MHz and UEs with NOF 52
+

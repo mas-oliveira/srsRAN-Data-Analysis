@@ -14,6 +14,53 @@ def filter_dataframe_by_test(df, test_conditions, test_nr, timestamps):
 def get_mean_stddev(df_col):
     return round(df_col.mean(), 2), round(df_col.std(), 2)
 
+#df_iperf --> where path loss is stored
+### TEMP => Using df_latency to split the tests because iperf was bad filled in terms of nr of test..
+def get_tests_info_by_test_nr(df_iperf, df_latency):
+    tests_info = {}
+    grouped = df_iperf.groupby('path_loss')
+
+    for path_loss, group_df in grouped:
+        print(f" ################## path_loss: {path_loss} ##################")
+        path_loss_info = {}
+
+        start_time = group_df['_time'].min().strftime('%Y-%m-%d %H:%M:%S')
+        end_time = group_df['_time'].max().strftime('%Y-%m-%d %H:%M:%S')
+        
+        filtered_latency_df = df_latency[(df_latency['_time'] >= start_time) & (df_latency['_time'] <= end_time)]
+
+        test_grouped = filtered_latency_df.groupby('test_number')
+
+        for test_number, test_group_df in test_grouped:
+            print(f" ####### test_number: {test_number} #######")
+            #print(test_group_df['test_number'])
+            start_time = test_group_df['_time'].min().strftime('%Y-%m-%d %H:%M:%S')
+            end_time = test_group_df['_time'].max().strftime('%Y-%m-%d %H:%M:%S')
+            print(f" ####### start_time: {start_time} #######")
+            print(f" ####### end_time: {end_time} #######")
+            print(f" ########################################## ")
+
+            path_loss_info[f"{test_number}_test"] = {'start': start_time, 'end': end_time}
+
+        tests_info[f'fixed_pl_{int(path_loss)}'] = path_loss_info
+
+    return tests_info
+
+
+
+
+
+
+def split_df_by_test_number(df):
+    grouped = df.groupby('test_number')
+    dfs_list = []
+
+    for test_number, group_df in grouped:
+        if group_df.shape[0] > 100:
+            dfs_list.append(group_df)
+    
+    return dfs_list
+
 def get_df_collection(df, pl_dist, nr_tests, timestamps):
     df_list = []
     for test_i in range(1, nr_tests + 1):
@@ -81,6 +128,7 @@ def mean_by_tests(df_list, tests_info_dict):
         mean_jitter_values = []
         mean_lost_percentage_values = []
         mean_transfer_values = []
+        mean_time_latency = []
         
         for df in dfs:
             mean_path_loss_values.append(df['path_loss'].mean())
@@ -90,6 +138,7 @@ def mean_by_tests(df_list, tests_info_dict):
             mean_jitter_values.append(df['jitter'].mean())
             mean_lost_percentage_values.append(df['lost_percentage'].mean())
             mean_transfer_values.append(df['transfer'].mean())
+            mean_time_latency.append(df['time_latency'].mean())
         
         mean_path_loss = sum(mean_path_loss_values) / len(mean_path_loss_values)
         mean_RlcSduTransmittedVolumeUL = sum(mean_RlcSduTransmittedVolumeUL_values) / len(mean_RlcSduTransmittedVolumeUL_values)
@@ -98,28 +147,62 @@ def mean_by_tests(df_list, tests_info_dict):
         mean_jitter_values = sum(mean_jitter_values) / len(mean_jitter_values)
         mean_lost_percentage_values = sum(mean_lost_percentage_values) / len(mean_lost_percentage_values)
         mean_transfer_values = sum(mean_transfer_values) / len(mean_transfer_values)
+        mean_time_latency = sum(mean_time_latency) / len(mean_time_latency)
 
         mean_values_by_category[category] = {
-            'mean_path_loss': mean_path_loss,
-            'mean_RlcSduTransmittedVolumeUL': mean_RlcSduTransmittedVolumeUL,
-            'mean_UeThpUl_values': mean_UeThpUl_values,
-            'mean_bitrate_values': mean_bitrate_values,
-            'mean_jitter_values': mean_jitter_values,
-            'mean_lost_percentage_values': mean_lost_percentage_values,
-            'mean_transfer_values': mean_transfer_values
+            'av_pl': mean_path_loss,
+            'av_tx_vol_ul': mean_RlcSduTransmittedVolumeUL,
+            'av_ue_thp_ul': mean_UeThpUl_values,
+            'av_bitrate': mean_bitrate_values,
+            'av_jitter': mean_jitter_values,
+            'av_lost_percentage': mean_lost_percentage_values,
+            'av_transfer': mean_transfer_values,
+            'av_time_latency': mean_time_latency
         }
 
-    # Print the mean values for each category
     for category, values in mean_values_by_category.items():
         print(f"Category: {category}")
-        print(f"Mean path loss: {values['mean_path_loss']}")
-        print(f"Mean DRB.RlcSduTransmittedVolumeUL: {values['mean_RlcSduTransmittedVolumeUL']}")
-        print(f"Mean UeThp: {values['mean_UeThpUl_values']}")
-        print(f"Mean bitrate: {values['mean_bitrate_values']}")    
-        print(f"Mean jitter: {values['mean_jitter_values']}")    
-        print(f"Mean lost_percentage: {values['mean_lost_percentage_values']}")
-        print(f"Mean transfer_values: {values['mean_transfer_values']}")
+        print(f"Mean path loss: {values['av_pl']}")
+        print(f"Mean DRB.RlcSduTransmittedVolumeUL: {values['av_tx_vol_ul']}")
+        print(f"Mean UeThp: {values['av_ue_thp_ul']}")
+        print(f"Mean bitrate: {values['av_bitrate']}")    
+        print(f"Mean jitter: {values['av_jitter']}")    
+        print(f"Mean lost_percentage: {values['av_lost_percentage']}")
+        print(f"Mean transfer_values: {values['av_transfer']}")
+        print(f"Mean time_latency: {values['av_time_latency']}")
         
+    if len(mean_values_by_category) == 2:
+        #percentage_dict = {}
+        sum_dict = {} 
+        categories = list(mean_values_by_category.keys())
+        percentage_dict = {categories[0]: {}, categories[1]: {}} 
+        metrics_to_sum = ['av_pl', 'av_tx_vol_ul', 'av_ue_thp_ul', 'av_bitrate', 'av_jitter', 'av_lost_percentage', 'av_transfer', 'av_time_latency']
+        for metric in metrics_to_sum:
+            sum_dict[metric] = mean_values_by_category[categories[0]][metric] + mean_values_by_category[categories[1]][metric]
+            percentage_dict[categories[0]][f'percentage_{metric} (%)'] = mean_values_by_category[categories[0]][metric] / sum_dict[metric]
+            percentage_dict[categories[1]][f'percentage_{metric} (%)'] = mean_values_by_category[categories[1]][metric] / sum_dict[metric]
+        print("###### SUM DICT")
+        print(sum_dict)
+        print("###### PERCENTAGE DICT")
+        print(percentage_dict)
+
+
+        return percentage_dict
+            
+
+    #### PREPARE TO PLOT
+    scaler = MinMaxScaler()
+    normalized_values_by_category = {}
+    metrics = ['av_pl', 'av_tx_vol_ul', 'av_ue_thp_ul', 'av_bitrate', 'av_jitter', 'av_lost_percentage', 'av_transfer', 'av_time_latency']
+
+    for metric in metrics:
+        metric_values = [values[metric] for values in mean_values_by_category.values()]
+        normalized_values = scaler.fit_transform([[value] for value in metric_values])
+        for category, value in zip(mean_values_by_category.keys(), normalized_values):
+            if category not in normalized_values_by_category:
+                normalized_values_by_category[category] = {}
+            normalized_values_by_category[category][metric] = value[0]
+    return normalized_values_by_category
 
 def plots_custom_agg_by_test(df_kpm_list, df_iperf_list, df_latency_list):
     #TODO: Check if the values of beggining or end of the tests have influence in the final results, you know more or less what to expect..

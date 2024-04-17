@@ -2,6 +2,7 @@ from sklearn.preprocessing import minmax_scale
 import pandas as pd
 import matplotlib.pyplot as plt
 import srsRAN_data_treatment
+import numpy as np
 
 def kpm_plot_single_test(df_kpm, df_iperf, df_latency):
     df_kpm = df_kpm[df_kpm['DRB.RlcSduTransmittedVolumeUL'] > 5]
@@ -71,3 +72,47 @@ def kpm_plot_multi_tests_pl(df_kpm_list, df_iperf_list, df_latency_list):
 
     plt.legend()
     plt.show()
+
+def plot_data_all_categories(normalized_values_by_category):
+    num_categories = len(normalized_values_by_category)
+    if num_categories == 2:
+        fig, ax = plt.subplots(figsize=(10, 6))
+        colors = ['palegreen', 'lightskyblue']  
+
+        category_labels = list(normalized_values_by_category.keys())
+        categories_data = list(normalized_values_by_category.values())
+
+        bar_width = 0.35
+        bar_positions = np.arange(len(categories_data[0]))
+
+        for i, (category, values) in enumerate(zip(category_labels, categories_data)):
+            ax.bar(bar_positions + i * bar_width, values.values(), bar_width, label=f'{category}', color=colors[i])
+
+        ax.set_title('Normalized values for both categories')
+        ax.set_ylabel('Normalized values')
+        ax.set_xticks(bar_positions + bar_width / 2)
+        ax.set_xticklabels(values.keys())
+        ax.tick_params(axis='x', rotation=25)  
+        ax.set_ylim([0, 1])
+        ax.legend()
+        plt.tight_layout()
+        plt.show()
+    else:
+        num_cols = 2  
+        num_rows = (num_categories + 1) // 2  
+
+        fig, axes = plt.subplots(num_rows, num_cols, figsize=(15, 6*num_rows))
+
+        for i, (category, values) in enumerate(normalized_values_by_category.items()):
+            row = i // num_cols
+            col = i % num_cols
+            ax = axes[row, col] if num_rows > 1 else axes[col]  
+
+            ax.bar(values.keys(), values.values())
+            ax.set_title(f'Category: {category}')
+            ax.set_ylabel('Normalized values')
+            ax.tick_params(axis='x', rotation=25)  
+            ax.set_ylim([0,1])
+
+        plt.tight_layout()
+        plt.show()

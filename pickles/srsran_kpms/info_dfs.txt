@@ -50,6 +50,14 @@ Specifications:
 - The tests were all performed with 3 UEs. The third test of PRB == 25 at the middle of the test one UE disconnected, trim to get stats, observe to see the influence.
 - There is also the need to round the noise amplitude. The reason is that the gRPC messages with float numbers sometimes make some float deadjustments.
 - One of the major steps is to join all the KPMs with the different PRBs in just one dataframe. Then we'll get a df with the KPMs to all four PRBs with a new column PRB. REpeat this step to iPerf and Latency dfs.
-	df_kpms_prbs.pkl
-	df_iperf_prbs.pkl
-	df_latency_prbs.pkl
+	df_kpms_prbs_agg.pkl
+	df_iperf_prbs_agg.pkl
+	df_latency_prbs_agg.pkl
+
+###############################################################################################
+
+df_kpms_prbs_agg.pkl
+df_iperf_prbs_agg.pkl
+df_latency_prbs_agg.pkl
+
+This dataframes have been built by srsRAN_main_prb AGG_PRBS. Now all the dataframes have a column with the PRBs and Noise Amplitude which is valuable to make some plots of the KPM variation.

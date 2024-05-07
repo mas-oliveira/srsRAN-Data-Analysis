@@ -182,3 +182,56 @@ def plot_data_by_ue_and_metric(dict_to_plot):
     plt.savefig('pl_10_and_90.png', dpi=300)
 
     plt.show()
+
+PRB_VALUES_TO_PLOT = [25, 52, 79, 106]
+METRICS_TO_PLOT_PER_PRB = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL', 'bitrate', 'jitter', 'lost_percentage', 'transfer', 'time_latency']
+NOISE_AMPLITUDE_VALUES_TO_PLOT = [-28.0, -26.0, -24.0, -22.0, -20.0, -18.0, -17.8, -17.6]
+
+def plot_metrics_av_per_prb(dict_to_plot):
+    num_metrics = len(METRICS_TO_PLOT_PER_PRB)
+    num_rows = num_metrics // 2 + (num_metrics % 2)  
+    fig, axs = plt.subplots(num_rows, 2, figsize=(14, 7*num_rows))
+    bar_width = 0.2
+
+    colors = plt.cm.tab20c(np.linspace(0, 1, len(PRB_VALUES_TO_PLOT)))
+
+    for i, metric in enumerate(METRICS_TO_PLOT_PER_PRB):
+        values = [dict_to_plot[metric][prb] for prb in PRB_VALUES_TO_PLOT]
+        r = list(range(len(PRB_VALUES_TO_PLOT)))
+
+        col = i % 2
+        row = i // 2
+
+        axs[row, col].bar([x + bar_width for x in r], values, width=bar_width, edgecolor='white', color=colors)
+        axs[row, col].set_xlabel('PRB', fontweight='bold')
+        axs[row, col].set_xticks([r + bar_width for r in range(len(PRB_VALUES_TO_PLOT))], PRB_VALUES_TO_PLOT)
+        axs[row, col].set_xticklabels(PRB_VALUES_TO_PLOT)
+        axs[row, col].set_title(f'{metric} average')
+
+    plt.tight_layout()
+
+    plt.savefig('metrics_per_prb.png')
+    
+    
+def plot_metrics_av_per_prb_and_an(dict_to_plot):
+    num_metrics = len(METRICS_TO_PLOT_PER_PRB)
+    fig, axs = plt.subplots(num_metrics, 1, figsize=(10, 6 * num_metrics))
+
+    colors = plt.cm.tab20c(np.linspace(0, 1, len(PRB_VALUES_TO_PLOT)))
+
+    for i, metric in enumerate(METRICS_TO_PLOT_PER_PRB):
+        ax = axs[i]
+        for j, prb in enumerate(PRB_VALUES_TO_PLOT):
+            values = [dict_to_plot[metric][prb][an] for an in NOISE_AMPLITUDE_VALUES_TO_PLOT]
+            ax.bar(np.arange(len(NOISE_AMPLITUDE_VALUES_TO_PLOT)) + j * 0.15, values, width=0.15, label=f'PRB {prb}', color=colors[j])
+
+        ax.set_xlabel('Noise Amplitude Variation')
+        ax.set_ylabel(metric)
+        ax.set_title(f'PRB and An average of - {metric}')
+        ax.set_xticks(np.arange(len(NOISE_AMPLITUDE_VALUES_TO_PLOT)) + 0.15 * (len(PRB_VALUES_TO_PLOT) - 1) / 2)
+        ax.set_xticklabels(NOISE_AMPLITUDE_VALUES_TO_PLOT)
+        ax.legend()
+
+    plt.tight_layout()
+    
+    plt.savefig('metrics_per_prb_and_an.png')

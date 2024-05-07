@@ -874,3 +874,58 @@ def sdu_model_volume(df_kpm, df_iperf, df_latency, time_steps):
     y = np.array(y)
     
     return X, y
+
+
+PRB_VALUES = [25, 52, 79, 106]
+NOISE_AMPLITUDE_VALUES = [-28.0, -26.0, -24.0, -22.0, -20.0, -18.0, -17.8, -17.6]
+METRICS_KPM = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL']
+METRICS_IPERF = ['bitrate', 'jitter', 'lost_percentage', 'transfer']
+METRICS_LATENCY = ['time_latency']
+
+def get_metrics_per_prb(df_kpm, df_iperf, df_latency):
+    metrics_average_dict = {metric: {} for metric in METRICS_KPM + METRICS_IPERF + METRICS_LATENCY}
+    
+    for prb in PRB_VALUES:
+        for metric in METRICS_KPM:
+            average = df_kpm[(df_kpm[metric] != 'None') & (df_kpm['prb'] == prb)][metric].astype(float).mean()
+            metrics_average_dict[metric][prb] = round(average, 2)
+        for metric in METRICS_IPERF:
+            average = df_iperf[(df_iperf[metric] != 'None') & (df_iperf['prb'] == prb)][metric].astype(float).mean()
+            metrics_average_dict[metric][prb] = round(average, 2)
+        for metric in METRICS_LATENCY:
+            average = df_latency[(df_latency[metric] != 'None') & (df_latency['prb'] == prb)][metric].astype(float).mean()
+            metrics_average_dict[metric][prb] = round(average, 2)
+    return metrics_average_dict
+
+def get_metrics_per_prb_and_an(df_kpm, df_iperf, df_latency):
+    metrics_average_dict = {
+        metric: {prb: {} for prb in PRB_VALUES} for metric in METRICS_KPM + METRICS_IPERF + METRICS_LATENCY
+    }
+    
+    for prb in PRB_VALUES:
+        for noise_amplitude in NOISE_AMPLITUDE_VALUES:
+            for metric in METRICS_KPM:
+                average = df_kpm[
+                    (df_kpm[metric] != 'None') & 
+                    (df_kpm['prb'] == prb) & 
+                    (df_kpm['noise_amplitude'] == noise_amplitude)
+                ][metric].astype(float).mean()
+                metrics_average_dict[metric][prb][noise_amplitude] = round(average, 2)
+                
+            for metric in METRICS_IPERF:
+                average = df_iperf[
+                    (df_iperf[metric] != 'None') & 
+                    (df_iperf['prb'] == prb) & 
+                    (df_iperf['noise_amplitude'] == noise_amplitude)
+                ][metric].astype(float).mean()
+                metrics_average_dict[metric][prb][noise_amplitude] = round(average, 2)
+                
+            for metric in METRICS_LATENCY:
+                average = df_latency[
+                    (df_latency[metric] != 'None') & 
+                    (df_latency['prb'] == prb) & 
+                    (df_latency['noise_amplitude'] == noise_amplitude)
+                ][metric].astype(float).mean()
+                metrics_average_dict[metric][prb][noise_amplitude] = round(average, 2)
+
+    return metrics_average_dict

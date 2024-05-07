@@ -1,0 +1,738 @@
+An = -18
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:31:09
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [37]
+---Metric: DRB.UEThpUl, Value: [4932]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [37]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4623]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [48]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [7]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [37]
+---Metric: DRB.UEThpUl, Value: [4863]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [37]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4430]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [4999]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4647]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:31:16
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [4305]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4022]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [49]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [5]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [4527]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4202]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [4334]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4046]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:31:21
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [28]
+---Metric: DRB.UEThpUl, Value: [4097]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [3962]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [47]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [9]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [27]
+---Metric: DRB.UEThpUl, Value: [4438]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4238]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [4273]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4046]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:31:28
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [28]
+---Metric: DRB.UEThpUl, Value: [4493]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4358]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [45]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [13]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [28]
+---Metric: DRB.UEThpUl, Value: [4595]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4394]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [28]
+---Metric: DRB.UEThpUl, Value: [4694]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4178]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:31:35
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [28]
+---Metric: DRB.UEThpUl, Value: [3752]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [3590]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [46]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [11]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [3719]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [3254]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [28]
+---Metric: DRB.UEThpUl, Value: [3637]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [3302]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:31:42
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [37]
+---Metric: DRB.UEThpUl, Value: [5333]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [37]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [5151]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [44]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [15]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [5185]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4875]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [5136]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4863]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:31:49
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [28]
+---Metric: DRB.UEThpUl, Value: [4954]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4815]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [42]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [19]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [5084]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4683]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [5117]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4695]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:31:56
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [37]
+---Metric: DRB.UEThpUl, Value: [4525]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [37]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4358]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [42]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [19]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [4409]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4070]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [37]
+---Metric: DRB.UEThpUl, Value: [4333]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [37]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [3902]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:32:02
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [23]
+---Metric: DRB.UEThpUl, Value: [5120]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [23]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4923]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [42]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [19]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [5318]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4971]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [28]
+---Metric: DRB.UEThpUl, Value: [5039]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4827]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:32:08
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [37]
+---Metric: DRB.UEThpUl, Value: [5375]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [37]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [5235]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [40]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [23]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [28]
+---Metric: DRB.UEThpUl, Value: [5758]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [5391]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [27]
+---Metric: DRB.UEThpUl, Value: [5765]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [5295]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:32:15
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [23]
+---Metric: DRB.UEThpUl, Value: [4066]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [23]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [3914]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [39]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [25]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [28]
+---Metric: DRB.UEThpUl, Value: [4242]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [3986]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [4323]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [3890]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:32:21
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [4597]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4442]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [38]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [26]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [4775]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4406]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [23]
+---Metric: DRB.UEThpUl, Value: [4781]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [23]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [4466]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:32:29
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [28]
+---Metric: DRB.UEThpUl, Value: [4098]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [3950]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [36]
+---Metric: RRU.PrbAvailUl, Value: [6]
+---Metric: RRU.PrbTotDl, Value: [30]
+---Metric: RRU.PrbTotUl, Value: [88]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [27]
+---Metric: DRB.UEThpUl, Value: [3970]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [3590]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [32]
+---Metric: DRB.UEThpUl, Value: [4076]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [3842]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:32:35
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [4]
+---Metric: DRB.UEThpUl, Value: [5632]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [37]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [5439]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [52]
+---Metric: RRU.PrbAvailUl, Value: [7]
+---Metric: RRU.PrbTotDl, Value: [0]
+---Metric: RRU.PrbTotUl, Value: [86]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [14]
+---Metric: DRB.UEThpUl, Value: [5773]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [5559]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [13]
+---Metric: DRB.UEThpUl, Value: [5880]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [5727]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:32:42
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [0]
+---Metric: DRB.UEThpUl, Value: [6679]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [6472]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [52]
+---Metric: RRU.PrbAvailUl, Value: [7]
+---Metric: RRU.PrbTotDl, Value: [0]
+---Metric: RRU.PrbTotUl, Value: [86]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [0]
+---Metric: DRB.UEThpUl, Value: [6296]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [23]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [6148]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [0]
+---Metric: DRB.UEThpUl, Value: [6582]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [6352]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:32:50
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [0]
+---Metric: DRB.UEThpUl, Value: [6200]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [6004]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [52]
+---Metric: RRU.PrbAvailUl, Value: [7]
+---Metric: RRU.PrbTotDl, Value: [0]
+---Metric: RRU.PrbTotUl, Value: [86]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [0]
+---Metric: DRB.UEThpUl, Value: [6190]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [41]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [5967]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [0]
+---Metric: DRB.UEThpUl, Value: [6040]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [37]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [5811]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:32:56
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [0]
+---Metric: DRB.UEThpUl, Value: [6650]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [41]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [6472]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [52]
+---Metric: RRU.PrbAvailUl, Value: [7]
+---Metric: RRU.PrbTotDl, Value: [0]
+---Metric: RRU.PrbTotUl, Value: [86]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [0]
+---Metric: DRB.UEThpUl, Value: [6258]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [6052]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [0]
+---Metric: DRB.UEThpUl, Value: [6157]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [37]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [5979]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+
+RIC Indication Received from gnb_001_001_00019b for Subscription ID: 7, KPM Report Style: 5
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2024-04-23 10:33:03
+-Measurements Data:
+--UE_id: 0
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [0]
+---Metric: DRB.UEThpUl, Value: [6582]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [6388]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [52]
+---Metric: RRU.PrbAvailUl, Value: [7]
+---Metric: RRU.PrbTotDl, Value: [0]
+---Metric: RRU.PrbTotUl, Value: [86]
+--UE_id: 1
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [0]
+---Metric: DRB.UEThpUl, Value: [6031]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [32]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [5835]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]
+--UE_id: 2
+---granulPeriod: 1000
+---Metric: DRB.UEThpDl, Value: [0]
+---Metric: DRB.UEThpUl, Value: [6383]
+---Metric: DRB.RlcPacketDropRateDl, Value: [0]
+---Metric: DRB.RlcSduTransmittedVolumeDL, Value: [27]
+---Metric: DRB.RlcSduTransmittedVolumeUL, Value: [6172]
+---Metric: DRB.PacketSuccessRateUlgNBUu, Value: [100]
+---Metric: RRU.PrbAvailDl, Value: [100]
+---Metric: RRU.PrbAvailUl, Value: [100]
+---Metric: RRU.PrbTotDl, Value: [100]
+---Metric: RRU.PrbTotUl, Value: [100]

@@ -20,3 +20,36 @@ df_latency_pl_10_f5.pkl   //     df_latency_pl_10_f5.pkl
 - This dataset group joins a group of tests made with the fixed value of Path Loss = 10/90dB. These table have now the test_number column, this way, timestamps.json is no longer needed.
 - The tests were performed with 3 UE and KPM Format 5. BW gNB => 10 MHz and UEs with NOF 52
 
+###############################################################################################
+
+df_kpms_org_simu_pl_10_f5.pkl      //     df_kpms_org_simu_pl_10_f5.pkl
+df_iperf_org_simu_pl_10_f5.pkl     //     df_iperf_org_simu_pl_10_f5.pkl 
+df_latency_org_simu_pl_10_f5.pkl   //     df_latency_org_simu_pl_10_f5.pkl
+- These dataframes are the same as the df_kpms_pl_X_f5 but are made with the original GNU Radio simulatiopn
+- The tests were performed with 3 UE and KPM Format 5. BW gNB => 10 MHz and UEs with NOF 52
+
+###############################################################################################
+
+prbs/df_kpms_prb_25.pkl // prbs/df_kpms_prb_52.pkl // prbs/df_kpms_prb_79.pkl // prbs/df_kpms_prb_106.pkl
+prbs/df_iperf_prb_25.pkl // prbs/df_iperf_prb_52.pkl // prbs/df_iperf_prb_79.pkl // prbs/df_iperf_prb_106.pkl
+prbs/df_latency_prb_25.pkl // prbs/df_latency_prb_52.pkl // prbs/df_latency_prb_79.pkl // prbs/df_latency_prb_106.pkl
+- These dataframes are the original ones generated with the tests with the different PRB numbers. 
+Specifications:
+	PRB == 25
+		Sample Rate => 5.76
+		gNB BW => 5 MHz
+	PRB == 52
+		Sample Rate => 11.52
+		gNB BW => 10 MHz
+	PRB == 79
+		Sample Rate => 15.36
+		gNB BW => 15 MHz
+	PRB == 106 
+		Sample Rate => 23.04
+		gNB BW => 20 MHz
+- The tests were all performed with 3 UEs. The third test of PRB == 25 at the middle of the test one UE disconnected, trim to get stats, observe to see the influence.
+- There is also the need to round the noise amplitude. The reason is that the gRPC messages with float numbers sometimes make some float deadjustments.
+- One of the major steps is to join all the KPMs with the different PRBs in just one dataframe. Then we'll get a df with the KPMs to all four PRBs with a new column PRB. REpeat this step to iPerf and Latency dfs.
+	df_kpms_prbs.pkl
+	df_iperf_prbs.pkl
+	df_latency_prbs.pkl

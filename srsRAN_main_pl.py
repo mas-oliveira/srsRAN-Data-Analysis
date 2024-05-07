@@ -56,7 +56,11 @@ TEST_NR = '1_test'
     PATH_LOSS_TESTS
     This variable is used to load tests with FIXED values of path loss
 """
-PATH_LOSS_TESTS = ["fixed_pl_10", "fixed_pl_90"]
+### UNCOMMENT TO USE FIXED_TESTS
+#PATH_LOSS_TESTS = ["fixed_pl_10", "fixed_pl_90"]
+### UNCOMMENT 
+PATH_LOSS_TESTS = ["new_org_simu_pl_10_f5", "new_org_simu_pl_90_f5"]
+
 
 """
     Data selection / Plot variable
@@ -66,7 +70,13 @@ PATH_LOSS_TESTS = ["fixed_pl_10", "fixed_pl_90"]
     After this upgrade there is a column named test_number where you don't need anymore to trim the dataset
         according to recorded timestamps on a json file 
 """
-FIXED_TESTS = True
+FIXED_TESTS = False
+
+"""
+    Data selection / Plot variable
+    Check if it will be need |(copying last code until see limitations)
+"""
+FIXED_TESTS_FORMAT_5 = True
 
 PLOTS = True
 PRE_MLAI = True
@@ -123,7 +133,6 @@ def main():
     df_iperf['_time'] = pd.to_datetime(df_iperf['_time'])
     df_latency['_time'] = pd.to_datetime(df_latency['_time'])
 
-    srsRAN_debug.write_csv(df_iperf['test_number'], 'iperf')
 
     timestamps_filter = load_timestamps()
 
@@ -164,7 +173,15 @@ def main():
             #srsRAN_debug.write_list_csv(splitted_df_kpm, 'kpm_test_nr')
             srsRAN_plots.kpm_plot_multi_tests_pl(splitted_df_kpm, splitted_df_iperf, splitted_df_latency)
 
-        
+        if FIXED_TESTS_FORMAT_5:
+            tests_info_dict = srsRAN_data_treatment.get_tests_info_by_test_nr(df_iperf, df_latency)
+
+            splitted_df_kpm = srsRAN_data_treatment.get_df_multi_collection(df_kpm, tests_info_dict)
+            splitted_df_iperf = srsRAN_data_treatment.get_df_multi_collection(df_iperf, tests_info_dict)
+            splitted_df_latency = srsRAN_data_treatment.get_df_multi_collection(df_latency, tests_info_dict)
+
+            srsRAN_plots.kpm_plot_multi_tests_pl(splitted_df_kpm, splitted_df_iperf, splitted_df_latency)
+
 
     if PRE_MLAI:   
         #### See if makes sense to change the name of prepare_dfs_correlation to prepare_dfs_numeric_pre_mlai
@@ -173,7 +190,7 @@ def main():
             #df_to_plot = srsRAN_data_treatment.prepare_dfs_correlation(df_iperf, df_kpm, df_latency, True)
             
             ### If doesn't need of timestamps.json to get the test times
-            if FIXED_TESTS: 
+            if FIXED_TESTS or FIXED_TESTS_FORMAT_5: 
                 tests_info_dict = srsRAN_data_treatment.get_tests_info_by_test_nr(df_iperf, df_latency)
             else:
                 tests_info_dict = {distribution: {test: timestamps_filter[distribution][test] for test in timestamps_filter[distribution]} for distribution in timestamps_filter}
@@ -182,12 +199,18 @@ def main():
             filtered_df_iperf = srsRAN_data_treatment.get_df_multi_collection(df_iperf, tests_info_dict)
             filtered_df_latency = srsRAN_data_treatment.get_df_multi_collection(df_latency, tests_info_dict)
             
-            #print(filtered_df_kpm)
-            df_agg_by_test = srsRAN_data_treatment.plots_custom_agg_by_test(filtered_df_kpm, filtered_df_iperf, filtered_df_latency)
             #print(df_agg_by_test)
-            dict_to_plot = srsRAN_data_treatment.mean_by_tests(df_agg_by_test, tests_info_dict)
-            print(dict_to_plot)
-            srsRAN_plots.plot_data_all_categories(dict_to_plot)
+            if FIXED_TESTS:
+                df_agg_by_test = srsRAN_data_treatment.plots_custom_agg_by_test(filtered_df_kpm, filtered_df_iperf, filtered_df_latency)
+                dict_to_plot = srsRAN_data_treatment.mean_by_tests(df_agg_by_test, tests_info_dict)
+                srsRAN_plots.plot_data_all_categories(dict_to_plot)
+            else:   
+                print(tests_info_dict)
+                df_kpm, df_iperf, df_latency = srsRAN_data_treatment.custom_agg_by_test_and_ue(filtered_df_kpm, filtered_df_iperf, filtered_df_latency, tests_info_dict)
+                dict_to_plot = srsRAN_data_treatment.mean_by_tests_by_ue(df_kpm, df_iperf, df_latency)
+                srsRAN_plots.plot_data_by_ue_and_metric(dict_to_plot)
+            # print(dict_to_plot)
+            
             #srsRAN_debug.write_csv(df_to_plot, 'pre_plot_aiml')
             #print(df_to_plot)
 

@@ -1,0 +1,2 @@
+srsRAN_main_pl.py => File to manage DFs that deal with the path loss variations.
+srsRAN_main_prb.py => Follow the same order of works that just loads the PRB DFs and make some works calling for srsRAN_plots and data_treatment functions.

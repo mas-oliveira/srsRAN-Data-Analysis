@@ -49,6 +49,8 @@ def kpm_plot_multi_tests_pl(df_kpm_list, df_iperf_list, df_latency_list):
     all_times_latency = []
 
     for df in df_kpm_list:
+        print(df['DRB.RlcSduTransmittedVolumeUL'])
+        df['DRB.RlcSduTransmittedVolumeUL'] = df['DRB.RlcSduTransmittedVolumeUL'].astype(int)
         filtered_values = df['DRB.RlcSduTransmittedVolumeUL'][df['DRB.RlcSduTransmittedVolumeUL'] > 5]
         filtered_times = pd.to_datetime(df['_time'][df['DRB.RlcSduTransmittedVolumeUL'] > 5])
         all_data_kpms.extend(filtered_values.tolist())
@@ -116,3 +118,67 @@ def plot_data_all_categories(normalized_values_by_category):
 
         plt.tight_layout()
         plt.show()
+
+def plot_data_all_by_ue_categories(normalized_values_by_category):
+    num_categories = len(normalized_values_by_category)
+    spacing_factor = 1.5 
+    bar_width = 0.15  
+
+    #print("#### INSIDE PLOT PRINT ####")
+    #print(normalized_values_by_category)
+
+    fig, axes = plt.subplots(num_categories, 1, figsize=(10, 6*num_categories))
+
+    for i, (category, values_dict) in enumerate(normalized_values_by_category.items()):
+        ax = axes[i]
+
+        ue_values = {k: v for k, v in values_dict.items() if k.startswith("ue")}
+        ue_keys = list(ue_values.keys())
+        ue_data = list(ue_values.values())
+        num_ue = len(ue_keys)
+        bar_positions = np.arange(len(ue_data[0]))
+
+        colors = ['skyblue', 'lightgreen', 'lightcoral']  
+
+        for j in range(num_ue):
+            ax.bar(bar_positions + j * spacing_factor * bar_width, ue_data[j].values(), bar_width, label=f'{ue_keys[j]}', color=colors[j])
+
+        presenting_values = values_dict.get("presenting_values", {})
+        presenting_data = list(presenting_values.values())
+        ax.bar(bar_positions + num_ue * spacing_factor * bar_width, presenting_data, bar_width, label='Presenting Values', color='orange')
+
+        ax.set_title(f'Category: {category}')
+        ax.set_ylabel('Normalized values')
+        ax.set_xticks(bar_positions + num_ue * spacing_factor * bar_width / 2)
+        ax.set_xticklabels(ue_data[0].keys())
+        ax.tick_params(axis='x', rotation=25)
+        ax.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+
+
+def plot_data_by_ue_and_metric(dict_to_plot):
+    num_metrics = len(next(iter(dict_to_plot.values())))
+    
+    fig, axs = plt.subplots(num_metrics, figsize=(10, num_metrics*5))
+    
+    for i, metric in enumerate(next(iter(dict_to_plot.values()))):
+        # Para cada categoria
+        for j, category in enumerate(dict_to_plot):
+            # Coleta os valores da métrica para cada UE
+            values = list(dict_to_plot[category][metric].values())
+            # Cria um gráfico de barras no subplot correspondente
+            axs[i].bar(np.arange(len(values)) + j*0.3, values, width=0.3, label=category)
+        
+        # Configura o título e os rótulos do subplot
+        axs[i].set_title(metric)
+        axs[i].set_xticks(np.arange(len(values)))
+        axs[i].set_xticklabels(list(next(iter(dict_to_plot[category].values())).keys()))
+        axs[i].legend()
+    
+    plt.tight_layout()
+    plt.savefig('pl_10_and_90.png', dpi=300)
+
+    plt.show()

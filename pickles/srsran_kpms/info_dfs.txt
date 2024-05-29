@@ -61,3 +61,8 @@ df_iperf_prbs_agg.pkl
 df_latency_prbs_agg.pkl
 
 This dataframes have been built by srsRAN_main_prb AGG_PRBS. Now all the dataframes have a column with the PRBs and Noise Amplitude which is valuable to make some plots of the KPM variation.
+
+completely_agg_prb_an.pkl => Just a dataframe joining all the data on KPMs, iPerf and Latency in one.
+								made by an aux script: helper_merge_dfs.py
+
+###############################################################################################

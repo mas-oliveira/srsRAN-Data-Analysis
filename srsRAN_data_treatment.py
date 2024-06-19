@@ -929,3 +929,151 @@ def get_metrics_per_prb_and_an(df_kpm, df_iperf, df_latency):
                 metrics_average_dict[metric][prb][noise_amplitude] = round(average, 2)
 
     return metrics_average_dict
+
+
+BITRATE_VALUES = ['1M', '2M', '3M']
+NOISE_AMPLITUDE_VALUES = [-28.0, -26.0, -24.0, -22.0, -20.0, -18.0, -17.8, -17.6, -17.4]
+METRICS_KPM = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL']
+METRICS_IPERF = ['jitter', 'lost_percentage', 'transfer']
+METRICS_LATENCY = ['time_latency']
+
+def get_metrics_per_bitrate(df_kpm, df_iperf, df_latency):
+    metrics_average_dict = {metric: {} for metric in METRICS_KPM + METRICS_IPERF + METRICS_LATENCY}
+    
+    for bitrate in BITRATE_VALUES:
+        for metric in METRICS_KPM:
+            average = df_kpm[(df_kpm[metric] != 'None') & (df_kpm['bandwidth_required'] == bitrate)][metric].astype(float).mean()
+            metrics_average_dict[metric][bitrate] = round(average, 2)
+        for metric in METRICS_IPERF:
+            average = df_iperf[(df_iperf[metric] != 'None') & (df_iperf['bandwidth_required'] == bitrate)][metric].astype(float).mean()
+            metrics_average_dict[metric][bitrate] = round(average, 2)
+        for metric in METRICS_LATENCY:
+            average = df_latency[(df_latency[metric] != 'None') & (df_latency['bandwidth_required'] == bitrate)][metric].astype(float).mean()
+            metrics_average_dict[metric][bitrate] = round(average, 2)
+    return metrics_average_dict
+
+def get_metrics_per_bitrate_and_an(df_kpm, df_iperf, df_latency):
+    metrics_average_dict = {
+        metric: {bitrate: {} for bitrate in BITRATE_VALUES} for metric in METRICS_KPM + METRICS_IPERF + METRICS_LATENCY
+    }
+    
+    for bitrate in BITRATE_VALUES:
+        for noise_amplitude in NOISE_AMPLITUDE_VALUES:
+            for metric in METRICS_KPM:
+                filtered_df = df_kpm[
+                    (df_kpm[metric] != 'None') & 
+                    (df_kpm['bandwidth_required'] == bitrate) & 
+                    (df_kpm['noise_amplitude'] == noise_amplitude)
+                ]
+                count = filtered_df.shape[0]
+                average = filtered_df[metric].astype(float).mean()
+                metrics_average_dict[metric][bitrate][noise_amplitude] = round(average, 2)
+                print(f"Metric: {metric}, Bitrate: {bitrate}, Noise Amplitude: {noise_amplitude}, Count: {count}, Average: {average}")
+
+            for metric in METRICS_IPERF:
+                filtered_df = df_iperf[
+                    (df_iperf[metric] != 'None') & 
+                    (df_iperf['bandwidth_required'] == bitrate) & 
+                    (df_iperf['noise_amplitude'] == noise_amplitude)
+                ]
+                count = filtered_df.shape[0]
+                average = filtered_df[metric].astype(float).mean()
+                metrics_average_dict[metric][bitrate][noise_amplitude] = round(average, 2)
+                print(f"Metric: {metric}, Bitrate: {bitrate}, Noise Amplitude: {noise_amplitude}, Count: {count}, Average: {average}")
+
+            for metric in METRICS_LATENCY:
+                filtered_df = df_latency[
+                    (df_latency[metric] != 'None') & 
+                    (df_latency['bandwidth_required'] == bitrate) & 
+                    (df_latency['noise_amplitude'] == noise_amplitude)
+                ]
+                count = filtered_df.shape[0]
+                average = filtered_df[metric].astype(float).mean()
+                metrics_average_dict[metric][bitrate][noise_amplitude] = round(average, 2)
+                print(f"Metric: {metric}, Bitrate: {bitrate}, Noise Amplitude: {noise_amplitude}, Count: {count}, Average: {average}")
+
+    return metrics_average_dict
+
+BITRATE_VALUES = ['1M', '2M', '3M', '4M', '5M']
+PRB_VALUES = [52,106]
+NOISE_AMPLITUDE_VALUES = [-28.0, -26.0, -24.0, -22.0, -20.0, -18.0, -17.8, -17.6, -17.4]
+METRICS_KPM = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL']
+METRICS_IPERF = ['jitter', 'lost_percentage', 'transfer', 'bitrate']
+METRICS_LATENCY = ['time_latency']
+def get_metrics_per_bitrate_an_and_prb(df_kpm, df_iperf, df_latency):
+    metrics_average_dict = {
+        metric: {prb: {bitrate: {} for bitrate in BITRATE_VALUES} for prb in PRB_VALUES} for metric in METRICS_KPM + METRICS_IPERF + METRICS_LATENCY
+    }
+    
+    for prb in PRB_VALUES:
+        for bitrate in BITRATE_VALUES:
+            for noise_amplitude in NOISE_AMPLITUDE_VALUES:
+                for metric in METRICS_KPM:
+                    filtered_df = df_kpm[
+                        (df_kpm[metric] != 'None') & 
+                        (df_kpm['bandwidth_required'] == bitrate) & 
+                        (df_kpm['noise_amplitude'] == noise_amplitude) & 
+                        (df_kpm['prb'] == prb)
+                    ]
+                    count = filtered_df.shape[0]
+                    average = filtered_df[metric].astype(float).mean()
+                    metrics_average_dict[metric][prb][bitrate][noise_amplitude] = round(average, 2) if count > 0 else None
+                    #print(f"Metric: {metric}, PRB: {prb}, Bitrate: {bitrate}, Noise Amplitude: {noise_amplitude}, Count: {count}, Average: {average}")
+
+                for metric in METRICS_IPERF:
+                    filtered_df = df_iperf[
+                        (df_iperf[metric] != 'None') & 
+                        (df_iperf['bandwidth_required'] == bitrate) & 
+                        (df_iperf['noise_amplitude'] == noise_amplitude) & 
+                        (df_iperf['prb'] == prb)
+                    ]
+                    count = filtered_df.shape[0]
+                    average = filtered_df[metric].astype(float).mean()
+                    metrics_average_dict[metric][prb][bitrate][noise_amplitude] = round(average, 2) if count > 0 else None
+                    #print(f"Metric: {metric}, PRB: {prb}, Bitrate: {bitrate}, Noise Amplitude: {noise_amplitude}, Count: {count}, Average: {average}")
+
+                for metric in METRICS_LATENCY:
+                    filtered_df = df_latency[
+                        (df_latency[metric] != 'None') & 
+                        (df_latency['bandwidth_required'] == bitrate) & 
+                        (df_latency['noise_amplitude'] == noise_amplitude) & 
+                        (df_latency['prb'] == prb)
+                    ]
+                    count = filtered_df.shape[0]
+                    average = filtered_df[metric].astype(float).mean()
+                    metrics_average_dict[metric][prb][bitrate][noise_amplitude] = round(average, 2) if count > 0 else None
+                    #print(f"Metric: {metric}, PRB: {prb}, Bitrate: {bitrate}, Noise Amplitude: {noise_amplitude}, Count: {count}, Average: {average}")
+
+    return metrics_average_dict
+
+
+TOLERANCE_PERCENTAGE = 70
+def generate_latency_arrays(df_latency):
+    latency_dict = {}
+    grouped = df_latency.groupby('test_number')
+
+    for test_number, group in grouped:
+        test_key = f"test_{test_number}"
+        test_dict = {}
+
+        for (ue_nr, bandwidth_required), sub_group in group.groupby(['ue_nr', 'bandwidth_required']):
+            ue_key = f"UE{ue_nr}_{bandwidth_required}"
+            
+            # Calcular média
+            mean_latency = sub_group['time_latency'].astype(float).mean()
+
+            # Definir os limites de tolerância em torno da média
+            lower_bound = mean_latency - (TOLERANCE_PERCENTAGE / 100.0) * mean_latency
+            upper_bound = mean_latency + (TOLERANCE_PERCENTAGE / 100.0) * mean_latency
+
+            # Filtrar valores com base na tolerância
+            filtered_latencies = sub_group[
+                (sub_group['time_latency'].astype(float) >= lower_bound) &
+                (sub_group['time_latency'].astype(float) <= upper_bound)
+            ]['time_latency'].astype(float).to_numpy()
+
+            test_dict[ue_key] = filtered_latencies
+        
+        latency_dict[test_key] = test_dict
+
+    return latency_dict

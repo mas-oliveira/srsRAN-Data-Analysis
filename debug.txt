@@ -1,0 +1,51 @@
+Número de noise_amplitude por test_number em df_kpm:
+1: noise_amplitude
+-100.0    132
+-28.0     210
+-26.0     267
+-24.0     261
+-22.0     255
+-20.0     255
+-18.0     159
+-17.8      91
+-17.6      90
+-17.4      90
+Name: count, dtype: int64
+
+Número de noise_amplitude por test_number em df_iperf:
+1: noise_amplitude
+-100.0    322
+-28.0     360
+-26.0     360
+-24.0     360
+-22.0     360
+-20.0     360
+-18.0     360
+-17.8     361
+-17.6     361
+-17.4     481
+Name: count, dtype: int64
+
+Número de noise_amplitude por test_number em df_latency:
+1: 0
+
+Número de ue_nr por test_number em df_kpm:
+1: ue_nr
+1    806
+2    502
+3    502
+Name: count, dtype: int64
+
+Número de ue_nr por test_number em df_iperf:
+1: ue_nr
+1    1254
+2    1243
+3    1188
+Name: count, dtype: int64
+
+Número de ue_nr por test_number em df_latency:
+1: ue_nr
+1    690
+2    686
+3    701
+Name: count, dtype: int64

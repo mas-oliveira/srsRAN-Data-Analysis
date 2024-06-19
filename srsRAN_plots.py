@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import srsRAN_data_treatment
 import numpy as np
+import os
 
 def kpm_plot_single_test(df_kpm, df_iperf, df_latency):
     df_kpm = df_kpm[df_kpm['DRB.RlcSduTransmittedVolumeUL'] > 5]
@@ -235,3 +236,117 @@ def plot_metrics_av_per_prb_and_an(dict_to_plot):
     plt.tight_layout()
     
     plt.savefig('metrics_per_prb_and_an.png')
+
+
+
+BITRATE_VALUES_TO_PLOT = ['1M', '2M', '3M']
+METRICS_TO_PLOT_PER_BITRATE = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL', 'jitter', 'transfer', 'time_latency']
+NOISE_AMPLITUDE_VALUES_TO_PLOT = [-28.0, -26.0, -24.0, -22.0, -20.0, -18.0, -17.8, -17.6, -17.4]
+
+def plot_metrics_av_per_bitrate_and_an(dict_to_plot):
+    num_metrics = len(METRICS_TO_PLOT_PER_BITRATE)
+    fig, axs = plt.subplots(num_metrics, 1, figsize=(10, 6 * num_metrics))
+
+    colors = plt.cm.tab20c(np.linspace(0, 1, len(BITRATE_VALUES_TO_PLOT)))
+
+    for i, metric in enumerate(METRICS_TO_PLOT_PER_BITRATE):
+        ax = axs[i]
+        for j, bitrate in enumerate(BITRATE_VALUES_TO_PLOT):
+            values = [dict_to_plot[metric][bitrate][an] for an in NOISE_AMPLITUDE_VALUES_TO_PLOT]
+            ax.bar(np.arange(len(NOISE_AMPLITUDE_VALUES_TO_PLOT)) + j * 0.15, values, width=0.15, label=f'Bitrate {bitrate}', color=colors[j])
+
+        ax.set_xlabel('Noise Amplitude Variation')
+        ax.set_ylabel(metric)
+        ax.set_title(f'PRB and An average of - {metric}')
+        ax.set_xticks(np.arange(len(NOISE_AMPLITUDE_VALUES_TO_PLOT)) + 0.15 * (len(BITRATE_VALUES_TO_PLOT) - 1) / 2)
+        ax.set_xticklabels(NOISE_AMPLITUDE_VALUES_TO_PLOT)
+        ax.legend()
+
+    plt.tight_layout()
+    
+    plt.savefig('metrics_per_bitrate_and_an.png')
+
+
+BITRATE_VALUES_TO_PLOT = ['1M', '2M', '3M', '4M', '5M']
+METRICS_TO_PLOT_PER_BITRATE = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL', 'jitter', 'transfer', 'time_latency', 'bitrate']
+NOISE_AMPLITUDE_VALUES_TO_PLOT = [-28.0, -26.0, -24.0, -22.0, -20.0, -18.0, -17.8, -17.6, -17.4]
+PRB_VALUES_TO_PLOT = [52, 106]
+OUTPUT_DIR = './latency_improved_plots'
+"""def plot_metrics_av_per_bitrate_an_prb(metrics_dict):
+    num_metrics = len(METRICS_TO_PLOT_PER_BITRATE)
+    fig, axs = plt.subplots(num_metrics, 1, figsize=(15, 6 * num_metrics))
+
+    # Verifica se há mais de um gráfico para plotar
+    if num_metrics == 1:
+        axs = [axs]
+
+    colors = plt.cm.tab20c(np.linspace(0, 1, len(PRB_VALUES_TO_PLOT)))
+
+    for i, metric in enumerate(METRICS_TO_PLOT_PER_BITRATE):
+        ax = axs[i]
+        for k, bitrate in enumerate(BITRATE_VALUES_TO_PLOT):
+            for j, prb in enumerate(PRB_VALUES_TO_PLOT):
+                values = [metrics_dict[metric][prb][bitrate][an] if metrics_dict[metric][prb][bitrate][an] is not None else 0 for an in NOISE_AMPLITUDE_VALUES_TO_PLOT]
+                x_positions = np.arange(len(NOISE_AMPLITUDE_VALUES_TO_PLOT)) + j * 0.2 + k * 0.1
+                ax.bar(x_positions, values, width=0.1, label=f'Bitrate {bitrate}, PRB {prb}', color=colors[j])
+
+        ax.set_xlabel('Noise Amplitude')
+        ax.set_ylabel(metric)
+        ax.set_title(f'Average values for {metric}')
+        ax.set_xticks(np.arange(len(NOISE_AMPLITUDE_VALUES_TO_PLOT)) + 0.1 * (len(BITRATE_VALUES_TO_PLOT) - 1) / 2)
+        ax.set_xticklabels(NOISE_AMPLITUDE_VALUES_TO_PLOT)
+        ax.legend()
+
+    plt.tight_layout()
+    plt.show()"""
+def plot_metrics_av_per_bitrate_an_prb(metrics_dict):
+    num_metrics = len(METRICS_TO_PLOT_PER_BITRATE)
+    
+    for metric in METRICS_TO_PLOT_PER_BITRATE:
+        fig, axs = plt.subplots(len(BITRATE_VALUES_TO_PLOT), 1, figsize=(10, 6 * len(BITRATE_VALUES_TO_PLOT)), sharex=True)
+        fig.suptitle(f'Average values for {metric}', fontsize=16)
+
+        if len(BITRATE_VALUES_TO_PLOT) == 1:
+            axs = [axs]
+
+        colors = plt.cm.tab20c(np.linspace(0, 1, len(PRB_VALUES_TO_PLOT)))
+
+        for k, bitrate in enumerate(BITRATE_VALUES_TO_PLOT):
+            ax = axs[k]
+            for j, prb in enumerate(PRB_VALUES_TO_PLOT):
+                values = [metrics_dict[metric][prb][bitrate][an] if metrics_dict[metric][prb][bitrate][an] is not None else 0 for an in NOISE_AMPLITUDE_VALUES_TO_PLOT]
+                x_positions = np.arange(len(NOISE_AMPLITUDE_VALUES_TO_PLOT)) + j * 0.2
+                ax.bar(x_positions, values, width=0.2, label=f'PRB {prb}', color=colors[j])
+
+            if k == len(BITRATE_VALUES_TO_PLOT) - 1:
+                ax.set_xlabel('Noise Amplitude')
+            ax.set_ylabel(metric)
+            ax.set_title(f'Bitrate {bitrate}')
+            ax.set_xticks(np.arange(len(NOISE_AMPLITUDE_VALUES_TO_PLOT)) + 0.1)
+            ax.set_xticklabels(NOISE_AMPLITUDE_VALUES_TO_PLOT)
+            ax.legend()
+
+        output_path = os.path.join(OUTPUT_DIR, f'{metric}.jpg')
+        plt.savefig(output_path)
+
+
+OUTPUT_DIR = './latency_improved_plots/latency_only/'
+def plot_latencies_per_test(latency_dict):
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    
+    for test_number, ue_data in latency_dict.items():
+        plt.figure(figsize=(120, 10)) 
+        plt.title(f'Latencies for {test_number}', fontsize=16)
+
+        for ue_key, latencies in ue_data.items():
+            plt.plot(np.arange(len(latencies)), latencies, label=ue_key)
+
+        plt.xlabel('Time')
+        plt.ylabel('Time Latency (ms)')
+        plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
+        
+        output_path = os.path.join(OUTPUT_DIR, f'{test_number}.jpg')
+        plt.savefig(output_path)
+        plt.close()

@@ -350,3 +350,33 @@ def plot_latencies_per_test(latency_dict):
         output_path = os.path.join(OUTPUT_DIR, f'{test_number}.jpg')
         plt.savefig(output_path)
         plt.close()
+
+
+
+BITRATE_VALUES_TO_PLOT = ['1M', '2M', '3M', '4M', '5M']
+METRICS_TO_PLOT_PER_BITRATE = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL', 'jitter', 'transfer', 'time_latency', 'bitrate']
+PRB_VALUES_TO_PLOT = [52, 106]
+OUTPUT_DIR = './plots/latency_improved_one_ue'
+def plot_metrics_av_per_bitrate_and_prb(metrics_dict):
+    for metric in METRICS_TO_PLOT_PER_BITRATE:
+        fig, ax = plt.subplots(figsize=(10, 6))
+        fig.suptitle(f'Average values for {metric}', fontsize=16)
+
+        x_positions = np.arange(len(BITRATE_VALUES_TO_PLOT))
+        bar_width = 0.4
+
+        colors = plt.cm.tab10(np.linspace(0, 1, len(PRB_VALUES_TO_PLOT)))
+
+        for j, prb in enumerate(PRB_VALUES_TO_PLOT):
+            values = [metrics_dict[metric][bitrate][prb] if prb in metrics_dict[metric][bitrate] else 0 for bitrate in BITRATE_VALUES_TO_PLOT]
+            ax.bar(x_positions + j * bar_width - bar_width/2, values, width=bar_width, label=f'PRB {prb}', color=colors[j])
+
+        ax.set_xlabel('Bitrate Values')
+        ax.set_ylabel(metric)
+        ax.set_title(f'{metric} across Bitrate Values')
+        ax.set_xticks(x_positions)
+        ax.set_xticklabels(BITRATE_VALUES_TO_PLOT)
+        ax.legend()
+
+        output_path = os.path.join(OUTPUT_DIR, f'{metric}.jpg')
+        plt.savefig(output_path)

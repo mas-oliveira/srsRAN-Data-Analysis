@@ -3,14 +3,18 @@ import srsRAN_data_treatment, srsRAN_debug, srsRAN_plots
 import pickle
 
 
-TEST_NAME = "multi_bitrate_and_noise_treated"
-TEST_MULTI_BITRATE = False
-TEST_MULTI_BITRATE_AND_NOISE = True
+#TEST_NAME = "multi_bitrate_and_noise_treated"
+#TEST_NAME = "one_ue_latency"
+TEST_NAME = "one_ue_latency_treated"
+TEST_MULTI_BITRATE = True
+TEST_MULTI_BITRATE_AND_NOISE = False
 
 TREATEMENT = False
 PRB_INSERT = True
-NOISE_INSERT = True
+NOISE_INSERT = False
 BITRATE_INSERT = True
+
+SINGLE_UE = True # Same experiments but with just one UE (df_kpms_one_ue_latency_clean, df_iperf_one_ue_latency_clean, df_latency_one_ue_latency_clean)
 
 def load_dataframes():
     df_kpm = pd.read_pickle(f'./pickles/srsran_kpms/df_kpms_{TEST_NAME}.pkl')
@@ -67,6 +71,34 @@ def insert_bitrate_and_an_value(df_kpm, df_iperf, df_latency):
         
         df_latency.loc[(df_latency['test_number'] == test_number) & (df_latency['_time'] == timestamp), 'bandwidth_required'] = bandwidth_required
         df_latency.loc[(df_latency['test_number'] == test_number) & (df_latency['_time'] == timestamp), 'noise_amplitude'] = noise_amplitude
+
+    return df_kpm, df_iperf, df_latency
+
+def insert_bitrate_and_prb_value(df_kpm, df_iperf, df_latency):
+    """df_kpm['_time'] = pd.to_datetime(df_kpm['_time'])
+    df_latency['_time'] = pd.to_datetime(df_latency['_time'])
+    df_iperf['_time'] = pd.to_datetime(df_iperf['_time'])
+    
+    df_iperf = df_iperf.sort_values(by='_time')"""
+
+    for index, row in df_iperf.iterrows():
+        test_number = row['test_number']
+        bandwidth_required = row['bandwidth_required']
+        prb = row['prb']
+        timestamp = row['_time']
+        
+        df_kpm.loc[(df_kpm['test_number'] == test_number) & (df_kpm['_time'] == timestamp), 'bandwidth_required'] = bandwidth_required
+        df_kpm.loc[(df_kpm['test_number'] == test_number) & (df_kpm['_time'] == timestamp), 'prb'] = prb
+        
+        df_latency.loc[(df_latency['test_number'] == test_number) & (df_latency['_time'] == timestamp), 'bandwidth_required'] = bandwidth_required
+        df_latency.loc[(df_latency['test_number'] == test_number) & (df_latency['_time'] == timestamp), 'prb'] = prb
+
+    pickle.dump(df_kpm, open(f'./pickles/srsran_kpms/df_kpms_{TEST_NAME}_treated.pkl', 'wb'))
+    pickle.dump(df_iperf, open(f'./pickles/srsran_kpms/df_iperf_{TEST_NAME}_treated.pkl', 'wb'))
+    pickle.dump(df_latency, open(f'./pickles/srsran_kpms/df_latency_{TEST_NAME}_treated.pkl', 'wb'))
+
+    print(f"Dataframes tratados salvos em pickle com nome 'df_kpms_{TEST_NAME}_treated.pkl', 'df_iperf_{TEST_NAME}_treated.pkl' e 'df_latency_{TEST_NAME}_treated.pkl'.")
+
 
     return df_kpm, df_iperf, df_latency
 
@@ -163,6 +195,22 @@ def insert_bitrate_noise_and_prb_latency_dataframe (df_iperf, df_latency):
     pickle.dump(df_latency, open(f'./pickles/srsran_kpms/df_latency_{TEST_NAME}.pkl', 'wb'))
     return df_latency
 
+def adjust_time_column(df_kpm, df_iperf, df_latency):
+    df_kpm['_time'] = df_kpm['_time'].astype(str)
+    df_iperf['_time'] = df_iperf['_time'].astype(str)
+    df_latency['_time'] = df_latency['_time'].astype(str)
+
+    df_kpm['_time'] = df_kpm['_time'].str.replace(r'(\+\d{2}:\d{2}).*', r'\1', regex=True)
+    df_iperf['_time'] = df_iperf['_time'].str.replace(r'(\+\d{2}:\d{2}).*', r'\1', regex=True)
+    df_latency['_time'] = df_latency['_time'].str.replace(r'(\+\d{2}:\d{2}).*', r'\1', regex=True)
+
+    df_kpm['_time'] = pd.to_datetime(df_kpm['_time'])
+    df_iperf['_time'] = pd.to_datetime(df_iperf['_time'])
+    df_latency['_time'] = pd.to_datetime(df_latency['_time'])
+
+    return df_kpm, df_iperf, df_latency
+
+
 BAD_TESTS = [12, 20]
 def remove_bad_test(df_kpm, df_iperf, df_latency):
     df_kpm = df_kpm[~df_kpm['test_number'].isin(BAD_TESTS)]
@@ -173,32 +221,47 @@ def remove_bad_test(df_kpm, df_iperf, df_latency):
 
 def main():
     df_kpm, df_iperf, df_latency = load_dataframes()
-    if TEST_MULTI_BITRATE:
-        df_kpm = df_kpm[df_kpm['ue_nr'].isna()]
-        df_kpm['ue_nr'].fillna(1, inplace=True)
-        df_kpm, df_iperf, df_latency = filter_tests_dataframes(df_kpm, df_iperf, df_latency)
-        df_kpm, df_iperf, df_latency = insert_bitrate_and_an_value(df_kpm, df_iperf, df_latency)
-        av_dict_per_prb_and_an = srsRAN_data_treatment.get_metrics_per_bitrate_and_an(df_kpm, df_iperf, df_latency)
-        print(av_dict_per_prb_and_an)
-        srsRAN_plots.plot_metrics_av_per_bitrate_and_an(av_dict_per_prb_and_an)
-    elif TEST_MULTI_BITRATE_AND_NOISE:
-        if TREATEMENT:
-            df_kpm, df_iperf, df_latency = remove_bad_test(df_kpm, df_iperf, df_latency)
-            df_kpm, df_iperf, df_latency = insert_bitrate_an_value_and_prb(df_kpm, df_iperf, df_latency)
 
-        else:
-            ### Uncomment to generate metrics plots
-            #av_dict_per_prb_bitrate_and_an = srsRAN_data_treatment.get_metrics_per_bitrate_an_and_prb(df_kpm, df_iperf, df_latency)
-            #srsRAN_plots.plot_metrics_av_per_bitrate_an_prb(av_dict_per_prb_bitrate_and_an)
+    if SINGLE_UE is False:
+        if TEST_MULTI_BITRATE:
+            df_kpm = df_kpm[df_kpm['ue_nr'].isna()]
+            df_kpm['ue_nr'].fillna(1, inplace=True)
+            df_kpm, df_iperf, df_latency = filter_tests_dataframes(df_kpm, df_iperf, df_latency)
+            df_kpm, df_iperf, df_latency = insert_bitrate_and_an_value(df_kpm, df_iperf, df_latency)
+            av_dict_per_prb_and_an = srsRAN_data_treatment.get_metrics_per_bitrate_and_an(df_kpm, df_iperf, df_latency)
+            print(av_dict_per_prb_and_an)
+            srsRAN_plots.plot_metrics_av_per_bitrate_and_an(av_dict_per_prb_and_an)
+        elif TEST_MULTI_BITRATE_AND_NOISE:
+            if TREATEMENT:
+                df_kpm, df_iperf, df_latency = remove_bad_test(df_kpm, df_iperf, df_latency)
+                df_kpm, df_iperf, df_latency = insert_bitrate_an_value_and_prb(df_kpm, df_iperf, df_latency)
 
-            dict_latencies = srsRAN_data_treatment.generate_latency_arrays(df_latency)
-            #print(dict_latencies)
+            else:
+                ### Uncomment to generate metrics plots
+                #av_dict_per_prb_bitrate_and_an = srsRAN_data_treatment.get_metrics_per_bitrate_an_and_prb(df_kpm, df_iperf, df_latency)
+                #srsRAN_plots.plot_metrics_av_per_bitrate_an_prb(av_dict_per_prb_bitrate_and_an)
 
-            srsRAN_plots.plot_latencies_per_test(dict_latencies)
+                dict_latencies = srsRAN_data_treatment.generate_latency_arrays(df_latency)
+                #print(dict_latencies)
 
-            ### Uncomment to generate latency plots
-            #srsRAN_plots.plot_latency_values()
+                srsRAN_plots.plot_latencies_per_test(dict_latencies)
 
+                ### Uncomment to generate latency plots
+                #srsRAN_plots.plot_latency_values()
+
+    elif SINGLE_UE is True:
+        if TEST_MULTI_BITRATE:
+
+            if TREATEMENT:
+                df_kpm, df_iperf, df_latency = adjust_time_column(df_kpm, df_iperf, df_latency)
+                df_kpm, df_iperf, df_latency = insert_bitrate_and_prb_value(df_kpm, df_iperf, df_latency)
+                srsRAN_debug.write_csv(df_kpm, 'df_kpm_debug')
+                srsRAN_debug.write_csv(df_iperf, 'df_iperf_debug')
+                srsRAN_debug.write_csv(df_latency, 'df_latency_debug')
+            else:
+                av_dict_per_prb_and_an = srsRAN_data_treatment.get_metrics_per_bitrate_and_prb(df_kpm, df_iperf, df_latency)
+                print(av_dict_per_prb_and_an)
+                srsRAN_plots.plot_metrics_av_per_bitrate_and_prb(av_dict_per_prb_and_an)
 
 if __name__ == "__main__":
     main()

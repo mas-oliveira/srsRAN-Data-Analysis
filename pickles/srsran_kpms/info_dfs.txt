@@ -102,3 +102,25 @@ So you don't have to wait everytime by the assemble of the columns bandiwdth_req
 df_latency and df_kpms.
 
 ###############################################################################################
+
+df_kpms_one_ue_latency.pkl
+df_iperf_one_ue_latency.pkl
+df_latency_one_ue_latency.pkl
+df_latency_one_ue.pkl
+
+Bitrate values => [1M, 2M, 3M, 4M, 5M] Multiple tests for each value
+PRB_values => [52,106]
+
+These dataframes were collected without noise and just one UE.
+There is two dataframes of latency which will converge into one, this was due to an error during the tests. 
+The dataframes will be threated (join df_latency_one_ue_latency with df_latency_one_ue and remove bad tests) on aux_threat_one_ue_latency.py
+
+It will load:
+df_kpms_one_ue_latency.pkl      (clean)
+df_iperf_one_ue_latency.pkl     (clean)
+df_latency_one_ue_latency.pkl   (clean)
+onto srsran_kpms.
+
+These datasets will generate the means and the plots on srsRAN_main_bitrates. The variable SINGLE_UE must be set to True before starting to play.
+
+The 

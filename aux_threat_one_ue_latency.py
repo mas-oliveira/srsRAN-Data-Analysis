@@ -1,8 +1,11 @@
 import pandas as pd
 import numpy as np
 
-TEST_NAME = "one_ue_latency"
+TEST_NAME = "one_ue_latency_noise"
 FAULTY_TEST_NAME = "one_ue"
+
+WITHOUT_NOISE = False
+WITH_NOISE = True
 
 def load_dataframes():
     df_kpm = pd.read_pickle(f'./pickles/srsran_kpms/df_kpms_{TEST_NAME}.pkl')
@@ -66,49 +69,87 @@ def trim_dataframes(df_kpm, df_iperf, df_latency):
     return df_kpm_trimmed, df_iperf_trimmed, df_latency_trimmed
 
 
-BAD_TESTS = [1, 7, 17, 19, 23, 24]
+BAD_TESTS_WITHOUT_NOISE = [1, 7, 17, 19, 23, 24]
+BAD_TESTS_WITH_NOISE = [1, 2 , 3, 17, 19, 21, 32]
+
 
 def main():
     df_kpm, df_iperf, df_latency = load_dataframes()
-    df_latency_bad = load_faulty_dataframe()
-    df_latency_bad = filter_and_increment_test_number(df_latency_bad)
-    
-    df_latency = pd.concat([df_latency, df_latency_bad]).sort_values('_time')
 
-    df_kpm = df_kpm[~df_kpm['test_number'].isin(BAD_TESTS)]
-    df_iperf = df_iperf[~df_iperf['test_number'].isin(BAD_TESTS)]
-    df_latency = df_latency[~df_latency['test_number'].isin(BAD_TESTS)]
+    if WITHOUT_NOISE:
+        df_latency_bad = load_faulty_dataframe()
+        df_latency_bad = filter_and_increment_test_number(df_latency_bad)
+        
+        df_latency = pd.concat([df_latency, df_latency_bad]).sort_values('_time')
 
-    print("Test number counts ordered in df_kpm:")
-    test_number_counts_kpm = df_kpm['test_number'].value_counts().sort_index()
-    print(test_number_counts_kpm)
+        df_kpm = df_kpm[~df_kpm['test_number'].isin(BAD_TESTS_WITHOUT_NOISE)]
+        df_iperf = df_iperf[~df_iperf['test_number'].isin(BAD_TESTS_WITHOUT_NOISE)]
+        df_latency = df_latency[~df_latency['test_number'].isin(BAD_TESTS_WITHOUT_NOISE)]
 
-    print("Test number counts ordered in df_iperf:")
-    test_number_counts_iperf = df_iperf['test_number'].value_counts().sort_index()
-    print(test_number_counts_iperf)
+        print("Test number counts ordered in df_kpm:")
+        test_number_counts_kpm = df_kpm['test_number'].value_counts().sort_index()
+        print(test_number_counts_kpm)
 
-    print("Test number counts ordered in df_latency:")
-    test_number_counts_latency = df_latency['test_number'].value_counts().sort_index()
-    print(test_number_counts_latency)
-    
-    df_kpm, df_iperf, df_latency = trim_dataframes(df_kpm, df_iperf, df_latency)
+        print("Test number counts ordered in df_iperf:")
+        test_number_counts_iperf = df_iperf['test_number'].value_counts().sort_index()
+        print(test_number_counts_iperf)
 
-    print("Test number counts ordered in df_kpm:")
-    test_number_counts_kpm = df_kpm['test_number'].value_counts().sort_index()
-    print(test_number_counts_kpm)
+        print("Test number counts ordered in df_latency:")
+        test_number_counts_latency = df_latency['test_number'].value_counts().sort_index()
+        print(test_number_counts_latency)
+        
+        df_kpm, df_iperf, df_latency = trim_dataframes(df_kpm, df_iperf, df_latency)
 
-    print("Test number counts ordered in df_iperf:")
-    test_number_counts_iperf = df_iperf['test_number'].value_counts().sort_index()
-    print(test_number_counts_iperf)
+        print("Test number counts ordered in df_kpm:")
+        test_number_counts_kpm = df_kpm['test_number'].value_counts().sort_index()
+        print(test_number_counts_kpm)
 
-    print("Test number counts ordered in df_latency:")
-    test_number_counts_latency = df_latency['test_number'].value_counts().sort_index()
-    print(test_number_counts_latency)
+        print("Test number counts ordered in df_iperf:")
+        test_number_counts_iperf = df_iperf['test_number'].value_counts().sort_index()
+        print(test_number_counts_iperf)
 
-    df_kpm.to_pickle('./pickles/srsran_kpms/df_kpms_one_ue_latency.pkl')
-    df_iperf.to_pickle('./pickles/srsran_kpms/df_iperf_one_ue_latency.pkl')
-    df_latency.to_pickle('./pickles/srsran_kpms/df_latency_one_ue_latency.pkl')
+        print("Test number counts ordered in df_latency:")
+        test_number_counts_latency = df_latency['test_number'].value_counts().sort_index()
+        print(test_number_counts_latency)
 
+        df_kpm.to_pickle('./pickles/srsran_kpms/df_kpms_one_ue_latency.pkl')
+        df_iperf.to_pickle('./pickles/srsran_kpms/df_iperf_one_ue_latency.pkl')
+        df_latency.to_pickle('./pickles/srsran_kpms/df_latency_one_ue_latency.pkl')
+
+    if WITH_NOISE:
+        df_kpm = df_kpm[~df_kpm['test_number'].isin(BAD_TESTS_WITH_NOISE)]
+        df_iperf = df_iperf[~df_iperf['test_number'].isin(BAD_TESTS_WITH_NOISE)]
+        df_latency = df_latency[~df_latency['test_number'].isin(BAD_TESTS_WITH_NOISE)]
+
+        print("Test number counts ordered in df_kpm:")
+        test_number_counts_kpm = df_kpm['test_number'].value_counts().sort_index()
+        print(test_number_counts_kpm)
+
+        print("Test number counts ordered in df_iperf:")
+        test_number_counts_iperf = df_iperf['test_number'].value_counts().sort_index()
+        print(test_number_counts_iperf)
+
+        print("Test number counts ordered in df_latency:")
+        test_number_counts_latency = df_latency['test_number'].value_counts().sort_index()
+        print(test_number_counts_latency)
+
+        df_kpm, df_iperf, df_latency = trim_dataframes(df_kpm, df_iperf, df_latency)
+
+        print("Test number counts ordered in df_kpm:")
+        test_number_counts_kpm = df_kpm['test_number'].value_counts().sort_index()
+        print(test_number_counts_kpm)
+
+        print("Test number counts ordered in df_iperf:")
+        test_number_counts_iperf = df_iperf['test_number'].value_counts().sort_index()
+        print(test_number_counts_iperf)
+
+        print("Test number counts ordered in df_latency:")
+        test_number_counts_latency = df_latency['test_number'].value_counts().sort_index()
+        print(test_number_counts_latency)
+
+        df_kpm.to_pickle('./pickles/srsran_kpms/df_kpms_one_ue_latency_noise.pkl')
+        df_iperf.to_pickle('./pickles/srsran_kpms/df_iperf_one_ue_latency_noise.pkl')
+        df_latency.to_pickle('./pickles/srsran_kpms/df_latency_one_ue_latency_noise.pkl')
 
 if __name__ == "__main__":
     main()

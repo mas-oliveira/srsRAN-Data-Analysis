@@ -1038,7 +1038,7 @@ def get_metrics_per_bitrate_and_prb(df_kpm, df_iperf, df_latency):
 
 BITRATE_VALUES = ['1M', '2M', '3M', '4M', '5M']
 PRB_VALUES = [52,106]
-NOISE_AMPLITUDE_VALUES = [-28.0, -26.0, -24.0, -22.0, -20.0, -18.0, -17.8, -17.6, -17.4]
+NOISE_AMPLITUDE_VALUES = [-28.0, -26.0, -24.0, -22.0, -20.0, -18.0, -17.8, -17.6, -17.4, -17.2]
 METRICS_KPM = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL']
 METRICS_IPERF = ['jitter', 'lost_percentage', 'transfer', 'bitrate']
 METRICS_LATENCY = ['time_latency']
@@ -1117,5 +1117,37 @@ def generate_latency_arrays(df_latency):
             test_dict[ue_key] = filtered_latencies
         
         latency_dict[test_key] = test_dict
+
+    return latency_dict
+
+
+def generate_latency_arrays_with_noise(df_latency):
+    latency_dict = {}
+    grouped = df_latency.groupby('test_number')
+
+    for test_number, group in grouped:
+        test_key = f"test_{test_number}"
+        noise_dict = {}
+
+        for noise, sub_group in group.groupby('noise_amplitude'):
+            noise_key = f"noise_{noise}"
+            latencies_list = []
+
+            for (ue_nr, bandwidth_required), sub_sub_group in sub_group.groupby(['ue_nr', 'bandwidth_required']):
+                mean_latency = sub_sub_group['time_latency'].astype(float).mean()
+
+                lower_bound = mean_latency - (TOLERANCE_PERCENTAGE / 100.0) * mean_latency
+                upper_bound = mean_latency + (TOLERANCE_PERCENTAGE / 100.0) * mean_latency
+
+                filtered_latencies = sub_sub_group[
+                    (sub_sub_group['time_latency'].astype(float) >= lower_bound) &
+                    (sub_sub_group['time_latency'].astype(float) <= upper_bound)
+                ]['time_latency'].astype(float).to_numpy()
+
+                latencies_list.extend(filtered_latencies)
+
+            noise_dict[noise_key] = np.array(latencies_list)
+        
+        latency_dict[test_key] = noise_dict
 
     return latency_dict

@@ -112,7 +112,7 @@ Bitrate values => [1M, 2M, 3M, 4M, 5M] Multiple tests for each value
 PRB_values => [52,106]
 
 These dataframes were collected without noise and just one UE.
-There is two dataframes of latency which will converge into one, this was due to an error during the tests. 
+There are two dataframes of latency which will converge into one, this was due to an error during the tests. 
 The dataframes will be threated (join df_latency_one_ue_latency with df_latency_one_ue and remove bad tests) on aux_threat_one_ue_latency.py
 
 It will load:
@@ -123,4 +123,19 @@ onto srsran_kpms.
 
 These datasets will generate the means and the plots on srsRAN_main_bitrates. The variable SINGLE_UE must be set to True before starting to play.
 
-The 
+The plots have been loaded to latency_improved_one_ue
+
+###############################################################################################
+
+df_kpms_one_ue_latency_noise.pkl
+df_iperf_one_ue_latency_noise.pkl
+df_latency_one_ue_latency_noise.pkl
+
+Bitrate values => [1M, 2M, 3M, 4M, 5M] Multiple tests for each value
+PRB_values => [52,106]
+
+An Values => [-100, -28, -26, -24, -22, -20, -18, -17.8, -17.6, -17.4, -17.2]
+
+These dataframes were collected with noise and just one UE.
+
+The dataframes were threated (remove bad tests) on aux_threat_one_ue_latency.py

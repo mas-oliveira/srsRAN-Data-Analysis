@@ -138,4 +138,30 @@ An Values => [-100, -28, -26, -24, -22, -20, -18, -17.8, -17.6, -17.4, -17.2]
 
 These dataframes were collected with noise and just one UE.
 
-The dataframes were threated (remove bad tests) on aux_threat_one_ue_latency.py
+The dataframes were treated (remove bad tests) on aux_threat_one_ue_latency.py
+
+The 2nd step of treatment is loaded as:
+df_kpms_one_ue_latency_noise_treated.pkl
+df_iperf_one_ue_latency_noise_treated.pkl
+df_latency_one_ue_latency_noise_treated.pkl
+
+Where they'll have all the number of bitrate and PRB to make easier to manage
+
+###############################################################################################
+
+df_kpms_two_ue_latency_noise.pkl
+df_iperf_two_ue_latency_noise.pkl
+df_latency_two_ue_latency_noise.pkl
+
+Bitrate values => [1M, 2M, 3M, 4M, 5M] Multiple tests for each value
+PRB_values => [52,106]
+
+An Values => [-100, -28, -26, -24, -22, -20, -18, -17.8, -17.6, -17.4, -17.2]
+
+These dataframes were collected with noise and two UEs.
+
+The dataframes were treated (remove bad tests) on aux_threat_one_ue_latency.py
+
+
+
+

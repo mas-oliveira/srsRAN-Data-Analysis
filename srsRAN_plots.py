@@ -304,6 +304,7 @@ PRB_VALUES_TO_PLOT = [52, 106]
     plt.tight_layout()
     plt.show()"""
 
+#OUTPUT_DIR = './plots/latency_improved_two_ue_noise'
 def plot_metrics_av_per_bitrate_an_prb(metrics_dict):
     num_metrics = len(METRICS_TO_PLOT_PER_BITRATE)
     
@@ -342,6 +343,7 @@ def plot_metrics_av_per_bitrate_an_prb(metrics_dict):
 
 #OUTPUT_DIR = './plots/latency_improved_one_ue_noise/latency_only/' # --> single ue
 
+#OUTPUT_DIR = './plots/latency_improved_two_ue_noise/latency_only/'
 def plot_latencies_per_test(latency_dict):
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
@@ -364,8 +366,9 @@ def plot_latencies_per_test(latency_dict):
 
 
 
-OUTPUT_DIR = './plots/latency_improved_one_ue_noise/latency_box_plots/' # --> single ue
+#OUTPUT_DIR = './plots/latency_improved_one_ue_noise/latency_box_plots/' # --> single ue
 
+OUTPUT_DIR = './plots/latency_improved_two_ue_noise/latency_box_plots/'
 def plot_latencies_box_plots_per_test(latency_dict, info_dict):
     for test_number, noise_data in latency_dict.items():
         plt.figure(figsize=(20, 10)) 

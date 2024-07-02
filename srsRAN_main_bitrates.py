@@ -2,6 +2,7 @@ import pandas as pd
 import srsRAN_data_treatment, srsRAN_debug, srsRAN_plots
 import pickle
 
+### Test names with _treated after should only be used after treathing with TREATEMENT variable
 
 #TEST_NAME = "multi_bitrate_and_noise_treated"
 #TEST_NAME = "one_ue_latency"
@@ -9,19 +10,23 @@ import pickle
 #TEST_NAME = "one_ue_latency_noise"
 
 #TEST_NAME = "one_ue_latency_treated"
-TEST_NAME = "one_ue_latency_noise_treated"  
-TEST_MULTI_BITRATE = True
-TEST_MULTI_BITRATE_AND_NOISE = False ### passar a false
+#TEST_NAME = "one_ue_latency_noise_treated"  
+
+#TEST_NAME = "two_ue_latency_noise"
+TEST_NAME = "two_ue_latency_noise_treated"
+
+TEST_MULTI_BITRATE = False
+TEST_MULTI_BITRATE_AND_NOISE = True 
 
 BITRATE_AND_PRB = False
 BITRATE_PRB_AND_AN = True
 
 TREATEMENT = False
 PRB_INSERT = True
-NOISE_INSERT = False
+NOISE_INSERT = True
 BITRATE_INSERT = True
 
-SINGLE_UE = True # Same experiments but with just one UE (df_kpms_one_ue_latency_clean, df_iperf_one_ue_latency_clean, df_latency_one_ue_latency_clean)
+SINGLE_UE = False # Same experiments but with just one UE (df_kpms_one_ue_latency_clean, df_iperf_one_ue_latency_clean, df_latency_one_ue_latency_clean)
 
 def load_dataframes():
     df_kpm = pd.read_pickle(f'./pickles/srsran_kpms/df_kpms_{TEST_NAME}.pkl')
@@ -117,7 +122,6 @@ def insert_bitrate_an_value_and_prb(df_kpm, df_iperf, df_latency):
 
     multi_ue = 'ue_nr' in df_kpm.columns
 
-
     df_kpm['_time'] = df_kpm['_time'].astype(str)
     df_iperf['_time'] = df_iperf['_time'].astype(str)
     df_latency['_time'] = df_latency['_time'].astype(str)
@@ -129,6 +133,12 @@ def insert_bitrate_an_value_and_prb(df_kpm, df_iperf, df_latency):
     df_kpm['_time'] = pd.to_datetime(df_kpm['_time'])
     df_latency['_time'] = pd.to_datetime(df_latency['_time'])
     df_iperf['_time'] = pd.to_datetime(df_iperf['_time'])
+
+    df_kpm['test_number'] = df_kpm['test_number'].astype(int)
+    df_kpm['ue_nr'] = df_kpm['ue_nr'].astype(int)
+
+    df_latency['test_number'] = df_latency['test_number'].astype(int)
+    df_latency['ue_nr'] = df_latency['ue_nr'].astype(int)
     
     df_iperf = df_iperf.sort_values(by='_time')
 
@@ -141,12 +151,10 @@ def insert_bitrate_an_value_and_prb(df_kpm, df_iperf, df_latency):
         prb = row['prb']
         timestamp = row['_time']
 
-
         if multi_ue:
             df_kpm.loc[(df_kpm['test_number'] == test_number) & (df_kpm['ue_nr'] == ue_nr) & (df_kpm['_time'] == timestamp), 'bandwidth_required'] = bandwidth_required
             df_kpm.loc[(df_kpm['test_number'] == test_number) & (df_kpm['ue_nr'] == ue_nr) & (df_kpm['_time'] == timestamp), 'noise_amplitude'] = noise_amplitude
             df_kpm.loc[(df_kpm['test_number'] == test_number) & (df_kpm['ue_nr'] == ue_nr) & (df_kpm['_time'] == timestamp), 'prb'] = prb
-            
             df_latency.loc[(df_latency['test_number'] == test_number) & (df_latency['ue_nr'] == ue_nr) & (df_latency['_time'] == timestamp), 'bandwidth_required'] = bandwidth_required
             df_latency.loc[(df_latency['test_number'] == test_number) & (df_latency['ue_nr'] == ue_nr) & (df_latency['_time'] == timestamp), 'noise_amplitude'] = noise_amplitude
             df_latency.loc[(df_latency['test_number'] == test_number) & (df_latency['ue_nr'] == ue_nr) & (df_latency['_time'] == timestamp), 'prb'] = prb
@@ -154,7 +162,6 @@ def insert_bitrate_an_value_and_prb(df_kpm, df_iperf, df_latency):
             df_kpm.loc[(df_kpm['test_number'] == test_number) & (df_kpm['_time'] == timestamp), 'bandwidth_required'] = bandwidth_required
             df_kpm.loc[(df_kpm['test_number'] == test_number) & (df_kpm['_time'] == timestamp), 'noise_amplitude'] = noise_amplitude
             df_kpm.loc[(df_kpm['test_number'] == test_number) & (df_kpm['_time'] == timestamp), 'prb'] = prb
-            
             df_latency.loc[(df_latency['test_number'] == test_number) & (df_latency['_time'] == timestamp), 'bandwidth_required'] = bandwidth_required
             df_latency.loc[(df_latency['test_number'] == test_number) & (df_latency['_time'] == timestamp), 'noise_amplitude'] = noise_amplitude
             df_latency.loc[(df_latency['test_number'] == test_number) & (df_latency['_time'] == timestamp), 'prb'] = prb
@@ -268,21 +275,23 @@ def main():
             srsRAN_plots.plot_metrics_av_per_bitrate_and_an(av_dict_per_prb_and_an)
         elif TEST_MULTI_BITRATE_AND_NOISE:
             if TREATEMENT:
-                df_kpm, df_iperf, df_latency = remove_bad_test(df_kpm, df_iperf, df_latency)
+                #df_kpm, df_iperf, df_latency = remove_bad_test(df_kpm, df_iperf, df_latency) => could also be done on aux_treat... in some cases
                 df_kpm, df_iperf, df_latency = insert_bitrate_an_value_and_prb(df_kpm, df_iperf, df_latency)
 
             else:
                 ### Uncomment to generate metrics plots
                 #av_dict_per_prb_bitrate_and_an = srsRAN_data_treatment.get_metrics_per_bitrate_an_and_prb(df_kpm, df_iperf, df_latency)
+                #print(av_dict_per_prb_bitrate_and_an)
                 #srsRAN_plots.plot_metrics_av_per_bitrate_an_prb(av_dict_per_prb_bitrate_and_an)
 
                 dict_latencies = srsRAN_data_treatment.generate_latency_arrays(df_latency)
                 #print(dict_latencies)
 
-                srsRAN_plots.plot_latencies_per_test(dict_latencies)
+                #srsRAN_plots.plot_latencies_per_test(dict_latencies)
 
-                ### Uncomment to generate latency plots
-                #srsRAN_plots.plot_latency_values()
+                dict_info = get_test_info(df_latency)
+                dict_latencies = srsRAN_data_treatment.generate_latency_arrays_with_noise(df_latency)
+                srsRAN_plots.plot_latencies_box_plots_per_test(dict_latencies, dict_info)
 
     elif SINGLE_UE is True:
         if TEST_MULTI_BITRATE:

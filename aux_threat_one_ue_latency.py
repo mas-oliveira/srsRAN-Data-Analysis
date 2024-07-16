@@ -7,7 +7,10 @@ TEST_NAME = "one_ue_latency_noise"
 FAULTY_TEST_NAME = "one_ue"
 """
 
-TEST_NAME = "two_ue_latency_noise"
+TEST_NAME = "one_ue_latency_noise"
+
+RANDOM_NOISE = True
+RANDOM_AN_TEST_NAME = "one_ue_random_noise"
 
 WITHOUT_NOISE = False
 WITH_NOISE = True
@@ -82,6 +85,17 @@ BAD_TESTS_WITH_NOISE = [1, 2 , 3, 17, 19, 21, 32]
 
 BAD_TESTS_WITH_NOISE = [7, 18]
 
+BAD_TESTS_RANDOM_NOISE = [40]
+
+
+### The dataset one_ue_latency_noise is splitted. The first 35 tests are with fixed noise values. The others are with random noise values
+
+MIN_TESTS_WITH_NOISE = 1
+MAX_TESTS_WITH_NOISE = 35
+
+MIN_TESTS_RANDOM_NOISE = 36
+MAX_TESTS_RANDOM_NOISE = 60
+
 
 def main():
     df_kpm, df_iperf, df_latency = load_dataframes()
@@ -127,9 +141,15 @@ def main():
         df_latency.to_pickle('./pickles/srsran_kpms/df_latency_one_ue_latency.pkl')
 
     if WITH_NOISE:
-        df_kpm = df_kpm[~df_kpm['test_number'].isin(BAD_TESTS_WITH_NOISE)]
-        df_iperf = df_iperf[~df_iperf['test_number'].isin(BAD_TESTS_WITH_NOISE)]
-        df_latency = df_latency[~df_latency['test_number'].isin(BAD_TESTS_WITH_NOISE)]
+        if RANDOM_NOISE:
+            df_kpm = df_kpm[(df_kpm['test_number'] >= MIN_TESTS_RANDOM_NOISE) & (df_kpm['test_number'] <= MAX_TESTS_RANDOM_NOISE) & (~df_kpm['test_number'].isin(BAD_TESTS_RANDOM_NOISE))]
+            df_iperf = df_iperf[(df_iperf['test_number'] >= MIN_TESTS_RANDOM_NOISE) & (df_iperf['test_number'] <= MAX_TESTS_RANDOM_NOISE) & (~df_iperf['test_number'].isin(BAD_TESTS_RANDOM_NOISE))]
+            df_latency = df_latency[(df_latency['test_number'] >= MIN_TESTS_RANDOM_NOISE) & (df_latency['test_number'] <= MAX_TESTS_RANDOM_NOISE) & (~df_latency['test_number'].isin(BAD_TESTS_RANDOM_NOISE))]
+        else:
+            df_kpm = df_kpm[(df_kpm['test_number'] >= MIN_TESTS_WITH_NOISE) & (df_kpm['test_number'] <= MAX_TESTS_WITH_NOISE) & (~df_kpm['test_number'].isin(BAD_TESTS_WITH_NOISE))]
+            df_iperf = df_iperf[(df_iperf['test_number'] >= MIN_TESTS_WITH_NOISE) & (df_iperf['test_number'] <= MAX_TESTS_WITH_NOISE) & (~df_iperf['test_number'].isin(BAD_TESTS_WITH_NOISE))]
+            df_latency = df_latency[(df_latency['test_number'] >= MIN_TESTS_WITH_NOISE) & (df_latency['test_number'] <= MAX_TESTS_WITH_NOISE) & (~df_latency['test_number'].isin(BAD_TESTS_WITH_NOISE))]
+
 
         print("Test number counts ordered in df_kpm:")
         test_number_counts_kpm = df_kpm['test_number'].value_counts().sort_index()
@@ -157,9 +177,14 @@ def main():
         test_number_counts_latency = df_latency['test_number'].value_counts().sort_index()
         print(test_number_counts_latency)
 
-        df_kpm.to_pickle(f'./pickles/srsran_kpms/df_kpms_{TEST_NAME}.pkl')
-        df_iperf.to_pickle(f'./pickles/srsran_kpms/df_iperf_{TEST_NAME}.pkl')
-        df_latency.to_pickle(f'./pickles/srsran_kpms/df_latency_{TEST_NAME}.pkl')
+        if RANDOM_NOISE:
+            df_kpm.to_pickle(f'./pickles/srsran_kpms/df_kpms_{RANDOM_AN_TEST_NAME}.pkl')
+            df_iperf.to_pickle(f'./pickles/srsran_kpms/df_iperf_{RANDOM_AN_TEST_NAME}.pkl')
+            df_latency.to_pickle(f'./pickles/srsran_kpms/df_latency_{RANDOM_AN_TEST_NAME}.pkl')
+        else:
+            df_kpm.to_pickle(f'./pickles/srsran_kpms/df_kpms_{TEST_NAME}.pkl')
+            df_iperf.to_pickle(f'./pickles/srsran_kpms/df_iperf_{TEST_NAME}.pkl')
+            df_latency.to_pickle(f'./pickles/srsran_kpms/df_latency_{TEST_NAME}.pkl')
 
 if __name__ == "__main__":
     main()

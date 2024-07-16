@@ -1036,14 +1036,75 @@ def get_metrics_per_bitrate_and_prb(df_kpm, df_iperf, df_latency):
 
     return metrics_average_dict
 
-BITRATE_VALUES = ['1M', '2M', '3M', '4M', '5M']
-PRB_VALUES = [52,106]
+#BITRATE_VALUES = ['1M', '2M', '3M', '4M', '5M']
+BITRATE_VALUES = ['1M']
+#PRB_VALUES = [52,106]
+PRB_VALUES = [52]
 NOISE_AMPLITUDE_VALUES = [-28.0, -26.0, -24.0, -22.0, -20.0, -18.0, -17.8, -17.6, -17.4, -17.2]
-METRICS_KPM = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL']
+NOISE_AMPLITUDE_INTERVAL = [-28.0, -16.0]
+METRICS_KPM = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL', 'DRB.AirIfDelayUl', 'DRB.RlcDelayUl']
 METRICS_IPERF = ['jitter', 'lost_percentage', 'transfer', 'bitrate']
 METRICS_LATENCY = ['time_latency']
-def get_metrics_per_bitrate_an_and_prb(df_kpm, df_iperf, df_latency):
+def get_metrics_per_bitrate_an_and_prb(df_kpm, df_iperf, df_latency, random_noise):
     metrics_average_dict = {
+        metric: {prb: {bitrate: {} for bitrate in BITRATE_VALUES} for prb in PRB_VALUES} for metric in METRICS_KPM + METRICS_IPERF + METRICS_LATENCY
+    }
+    
+    if random_noise:
+        noise_amplitude_ranges = np.arange(NOISE_AMPLITUDE_INTERVAL[0] + 1, NOISE_AMPLITUDE_INTERVAL[1] + 1)
+    else:
+        noise_amplitude_ranges = NOISE_AMPLITUDE_VALUES
+
+    for prb in PRB_VALUES:
+        for bitrate in BITRATE_VALUES:
+            for noise_amplitude in noise_amplitude_ranges:
+                if random_noise:
+                    min_amplitude = noise_amplitude - 1
+                    max_amplitude = noise_amplitude
+                else:
+                    min_amplitude = noise_amplitude
+                    max_amplitude = noise_amplitude
+                
+                for metric in METRICS_KPM:
+                    filtered_df = df_kpm[
+                        (df_kpm[metric] != 'None') & 
+                        (df_kpm['bandwidth_required'] == bitrate) & 
+                        (df_kpm['noise_amplitude'] > min_amplitude) &
+                        (df_kpm['noise_amplitude'] <= max_amplitude) &
+                        (df_kpm['prb'] == prb)
+                    ]
+                    count = filtered_df.shape[0]
+                    average = filtered_df[metric].astype(float).mean()
+                    metrics_average_dict[metric][prb][bitrate][(min_amplitude, max_amplitude)] = round(average, 2) if count > 0 else None
+
+                for metric in METRICS_IPERF:
+                    filtered_df = df_iperf[
+                        (df_iperf[metric] != 'None') & 
+                        (df_iperf['bandwidth_required'] == bitrate) & 
+                        (df_iperf['noise_amplitude'] > min_amplitude) &
+                        (df_iperf['noise_amplitude'] <= max_amplitude) &
+                        (df_iperf['prb'] == prb)
+                    ]
+                    count = filtered_df.shape[0]
+                    average = filtered_df[metric].astype(float).mean()
+                    metrics_average_dict[metric][prb][bitrate][(min_amplitude, max_amplitude)] = round(average, 2) if count > 0 else None
+
+                for metric in METRICS_LATENCY:
+                    filtered_df = df_latency[
+                        (df_latency[metric] != 'None') & 
+                        (df_latency['bandwidth_required'] == bitrate) & 
+                        (df_latency['noise_amplitude'] > min_amplitude) &
+                        (df_latency['noise_amplitude'] <= max_amplitude) &
+                        (df_latency['prb'] == prb) 
+                    ]
+                    count = filtered_df.shape[0]
+                    average = filtered_df[metric].astype(float).mean()
+                    metrics_average_dict[metric][prb][bitrate][(min_amplitude, max_amplitude)] = round(average, 2) if count > 0 else None
+
+    return metrics_average_dict
+
+### BACKUP get_metrics_per_bitrate_an_and_prb(df_kpm, df_iperf, df_latency)
+    """metrics_average_dict = {
         metric: {prb: {bitrate: {} for bitrate in BITRATE_VALUES} for prb in PRB_VALUES} for metric in METRICS_KPM + METRICS_IPERF + METRICS_LATENCY
     }
     
@@ -1086,7 +1147,7 @@ def get_metrics_per_bitrate_an_and_prb(df_kpm, df_iperf, df_latency):
                     metrics_average_dict[metric][prb][bitrate][noise_amplitude] = round(average, 2) if count > 0 else None
                     #print(f"Metric: {metric}, PRB: {prb}, Bitrate: {bitrate}, Noise Amplitude: {noise_amplitude}, Count: {count}, Average: {average}")
 
-    return metrics_average_dict
+    return metrics_average_dict"""
 
 
 TOLERANCE_PERCENTAGE = 70
@@ -1121,7 +1182,8 @@ def generate_latency_arrays(df_latency):
     return latency_dict
 
 
-def generate_latency_arrays_with_noise(df_latency):
+## If random_an is True NOISE_AMPLITUDE_INTERVAL instead of simply group by noise value
+def generate_latency_arrays_with_noise(df_latency, random_an):
     latency_dict = {}
     grouped = df_latency.groupby('test_number')
 
@@ -1129,25 +1191,53 @@ def generate_latency_arrays_with_noise(df_latency):
         test_key = f"test_{test_number}"
         noise_dict = {}
 
-        for noise, sub_group in group.groupby('noise_amplitude'):
-            noise_key = f"noise_{noise}"
-            latencies_list = []
+        if random_an:
+            # Gerar os intervalos de ruído de 1 em 1 dB
+            noise_intervals = np.arange(NOISE_AMPLITUDE_INTERVAL[0], NOISE_AMPLITUDE_INTERVAL[1], 1.0)
+            noise_intervals = [(noise_intervals[i], noise_intervals[i+1]) for i in range(len(noise_intervals)-1)]
 
-            for (ue_nr, bandwidth_required), sub_sub_group in sub_group.groupby(['ue_nr', 'bandwidth_required']):
-                mean_latency = sub_sub_group['time_latency'].astype(float).mean()
+            for interval in noise_intervals:
+                noise_key = f"noise_{interval[0]}_{interval[1]}"
+                latencies_list = []
 
-                lower_bound = mean_latency - (TOLERANCE_PERCENTAGE / 100.0) * mean_latency
-                upper_bound = mean_latency + (TOLERANCE_PERCENTAGE / 100.0) * mean_latency
+                # Filtrar o grupo com base no intervalo de ruído
+                sub_group = group[(group['noise_amplitude'] >= interval[0]) & (group['noise_amplitude'] < interval[1])]
 
-                filtered_latencies = sub_sub_group[
-                    (sub_sub_group['time_latency'].astype(float) >= lower_bound) &
-                    (sub_sub_group['time_latency'].astype(float) <= upper_bound)
-                ]['time_latency'].astype(float).to_numpy()
+                for (ue_nr, bandwidth_required), sub_sub_group in sub_group.groupby(['ue_nr', 'bandwidth_required']):
+                    mean_latency = sub_sub_group['time_latency'].astype(float).mean()
 
-                latencies_list.extend(filtered_latencies)
+                    lower_bound = mean_latency - (TOLERANCE_PERCENTAGE / 100.0) * mean_latency
+                    upper_bound = mean_latency + (TOLERANCE_PERCENTAGE / 100.0) * mean_latency
 
-            noise_dict[noise_key] = np.array(latencies_list)
-        
+                    filtered_latencies = sub_sub_group[
+                        (sub_sub_group['time_latency'].astype(float) >= lower_bound) &
+                        (sub_sub_group['time_latency'].astype(float) <= upper_bound)
+                    ]['time_latency'].astype(float).to_numpy()
+
+                    latencies_list.extend(filtered_latencies)
+
+                noise_dict[noise_key] = np.array(latencies_list)
+
+        else:
+            for noise, sub_group in group.groupby('noise_amplitude'):
+                noise_key = f"noise_{noise}"
+                latencies_list = []
+
+                for (ue_nr, bandwidth_required), sub_sub_group in sub_group.groupby(['ue_nr', 'bandwidth_required']):
+                    mean_latency = sub_sub_group['time_latency'].astype(float).mean()
+
+                    lower_bound = mean_latency - (TOLERANCE_PERCENTAGE / 100.0) * mean_latency
+                    upper_bound = mean_latency + (TOLERANCE_PERCENTAGE / 100.0) * mean_latency
+
+                    filtered_latencies = sub_sub_group[
+                        (sub_sub_group['time_latency'].astype(float) >= lower_bound) &
+                        (sub_sub_group['time_latency'].astype(float) <= upper_bound)
+                    ]['time_latency'].astype(float).to_numpy()
+
+                    latencies_list.extend(filtered_latencies)
+
+                noise_dict[noise_key] = np.array(latencies_list)
+
         latency_dict[test_key] = noise_dict
 
     return latency_dict

@@ -268,10 +268,13 @@ def plot_metrics_av_per_bitrate_and_an(dict_to_plot):
     plt.savefig('metrics_per_bitrate_and_an.png')
 
 
-BITRATE_VALUES_TO_PLOT = ['1M', '2M', '3M', '4M', '5M']
-METRICS_TO_PLOT_PER_BITRATE = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL', 'jitter', 'transfer', 'time_latency', 'bitrate']
+#BITRATE_VALUES_TO_PLOT = ['1M', '2M', '3M', '4M', '5M']
+BITRATE_VALUES_TO_PLOT = ['1M']
+METRICS_TO_PLOT_PER_BITRATE = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL', 'DRB.RlcDelayUl', 'DRB.AirIfDelayUl', 'jitter', 'transfer', 'time_latency', 'bitrate']
 NOISE_AMPLITUDE_VALUES_TO_PLOT = [-28.0, -26.0, -24.0, -22.0, -20.0, -18.0, -17.8, -17.6, -17.4]
-PRB_VALUES_TO_PLOT = [52, 106]
+NOISE_INTERVAL_VALUES = [-28.0, 16.0]
+#PRB_VALUES_TO_PLOT = [52, 106]
+PRB_VALUES_TO_PLOT = [52]
 #OUTPUT_DIR = './plots/latency_improved_plots' ==> multi ue
 
 #OUTPUT_DIR = './plots/latency_improved_one_ue_noise' # ==> single ue
@@ -305,9 +308,8 @@ PRB_VALUES_TO_PLOT = [52, 106]
     plt.show()"""
 
 #OUTPUT_DIR = './plots/latency_improved_two_ue_noise'
-def plot_metrics_av_per_bitrate_an_prb(metrics_dict):
-    num_metrics = len(METRICS_TO_PLOT_PER_BITRATE)
-    
+#OUTPUT_DIR = './plots/random_noise_one_ue'
+def plot_metrics_av_per_bitrate_an_prb(metrics_dict, random_an):
     for metric in METRICS_TO_PLOT_PER_BITRATE:
         fig, axs = plt.subplots(len(BITRATE_VALUES_TO_PLOT), 1, figsize=(10, 6 * len(BITRATE_VALUES_TO_PLOT)), sharex=True)
         fig.suptitle(f'Average values for {metric}', fontsize=16)
@@ -320,12 +322,19 @@ def plot_metrics_av_per_bitrate_an_prb(metrics_dict):
         for k, bitrate in enumerate(BITRATE_VALUES_TO_PLOT):
             ax = axs[k]
             for j, prb in enumerate(PRB_VALUES_TO_PLOT):
-                values = [metrics_dict[metric][prb][bitrate][an] if metrics_dict[metric][prb][bitrate][an] is not None else 0 for an in NOISE_AMPLITUDE_VALUES_TO_PLOT]
-                x_positions = np.arange(len(NOISE_AMPLITUDE_VALUES_TO_PLOT)) + j * 0.2
+                if random_an:
+                    noise_amplitude_keys = sorted(metrics_dict[metric][prb][bitrate].keys())
+                    values = [metrics_dict[metric][prb][bitrate][an] if metrics_dict[metric][prb][bitrate][an] is not None else 0 for an in noise_amplitude_keys]
+                    x_labels = [f']{an[0]}, {an[1]}]' for an in noise_amplitude_keys]
+                else:
+                    values = [metrics_dict[metric][prb][bitrate][an] if metrics_dict[metric][prb][bitrate][an] is not None else 0 for an in NOISE_AMPLITUDE_VALUES_TO_PLOT]
+                    x_labels = [f'{noise} dB' for noise in NOISE_AMPLITUDE_VALUES_TO_PLOT]
+
+                x_positions = np.arange(len(x_labels)) + j * 0.2
                 ax.bar(x_positions, values, width=0.2, label=f'PRB {prb}', color=colors[j])
 
-            ax.set_xticks(np.arange(len(NOISE_AMPLITUDE_VALUES_TO_PLOT)) + 0.1)
-            ax.set_xticklabels([f'{noise} dB' for noise in NOISE_AMPLITUDE_VALUES_TO_PLOT])
+            ax.set_xticks(np.arange(len(x_labels)) + 0.1)
+            ax.set_xticklabels(x_labels, rotation=45)
             
             ax.set_ylabel(metric)
             ax.set_title(f'Bitrate {bitrate}')
@@ -368,8 +377,8 @@ def plot_latencies_per_test(latency_dict):
 
 #OUTPUT_DIR = './plots/latency_improved_one_ue_noise/latency_box_plots/' # --> single ue
 
-OUTPUT_DIR = './plots/latency_improved_two_ue_noise/latency_box_plots/'
-def plot_latencies_box_plots_per_test(latency_dict, info_dict):
+OUTPUT_DIR = './plots/random_noise_one_ue/latency_box_plots/'
+def plot_latencies_box_plots_per_test(latency_dict, info_dict, random_an):
     for test_number, noise_data in latency_dict.items():
         plt.figure(figsize=(20, 10)) 
         plt.title(f'Latencies for {test_number}', fontsize=16)
@@ -396,11 +405,37 @@ def plot_latencies_box_plots_per_test(latency_dict, info_dict):
         plt.savefig(output_path)
         plt.close()
 
+def plot_agg_latencies_box_plots(dict_latencies):
+    for key, noise_data in dict_latencies.items():
+        print(key)
+        bandwidth_required, prb = key  
+        plt.figure(figsize=(20, 10))
+        plt.title(f'Latencies for Bandwidth {bandwidth_required} and PRB {prb}', fontsize=16)
+
+        all_latencies = []
+        labels = []
+
+        for noise_key, latencies in noise_data.items():
+            all_latencies.append(latencies)
+            labels.append(noise_key)
+
+        plt.boxplot(all_latencies, labels=labels, vert=True)
+
+        plt.xlabel('Noise Levels')
+        plt.ylabel('Time Latency (ms)')
+        plt.xticks(rotation=45, ha='right')
+        plt.grid(True)
+        plt.tight_layout()
+
+        output_path = os.path.join(OUTPUT_DIR, f'bandwidth_{bandwidth_required}_prb_{prb}.jpg')
+        plt.savefig(output_path)
+        plt.close()
 
 
-BITRATE_VALUES_TO_PLOT = ['1M', '2M', '3M', '4M', '5M']
-METRICS_TO_PLOT_PER_BITRATE = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL', 'jitter', 'transfer', 'time_latency', 'bitrate']
-PRB_VALUES_TO_PLOT = [52, 106]
+
+#BITRATE_VALUES_TO_PLOT = ['1M', '2M', '3M', '4M', '5M']
+#METRICS_TO_PLOT_PER_BITRATE = ['DRB.PacketSuccessRateUlgNBUu', 'DRB.UEThpUl', 'RRU.PrbAvailUl', 'RRU.PrbTotDl', 'RRU.PrbTotUl', 'DRB.RlcSduTransmittedVolumeUL', 'jitter', 'transfer', 'time_latency', 'bitrate']
+#PRB_VALUES_TO_PLOT = [52, 106]
 #OUTPUT_DIR = './plots/latency_improved_one_ue'
 def plot_metrics_av_per_bitrate_and_prb(metrics_dict):
     for metric in METRICS_TO_PLOT_PER_BITRATE:

@@ -1,6 +1,7 @@
 import pandas as pd
 import srsRAN_data_treatment, srsRAN_debug, srsRAN_plots
 import pickle
+import numpy as np
 
 ### Test names with _treated after should only be used after treathing with TREATEMENT variable
 
@@ -8,25 +9,28 @@ import pickle
 #TEST_NAME = "one_ue_latency"
 
 #TEST_NAME = "one_ue_latency_noise"
-
-#TEST_NAME = "one_ue_latency_treated"
 #TEST_NAME = "one_ue_latency_noise_treated"  
 
-#TEST_NAME = "two_ue_latency_noise"
-TEST_NAME = "two_ue_latency_noise_treated"
+#TEST_NAME = "one_ue_random_noise"
+TEST_NAME = "one_ue_random_noise_treated"
 
-TEST_MULTI_BITRATE = False
+#TEST_NAME = "two_ue_latency_noise"
+#TEST_NAME = "two_ue_latency_noise_treated"
+
+TEST_MULTI_BITRATE = True
 TEST_MULTI_BITRATE_AND_NOISE = True 
 
 BITRATE_AND_PRB = False
 BITRATE_PRB_AND_AN = True
+
+RANDOM_AN = True ### This variable is set to know if we have to select the tests of fixed An values or random an values (36 to 60)
 
 TREATEMENT = False
 PRB_INSERT = True
 NOISE_INSERT = True
 BITRATE_INSERT = True
 
-SINGLE_UE = False # Same experiments but with just one UE (df_kpms_one_ue_latency_clean, df_iperf_one_ue_latency_clean, df_latency_one_ue_latency_clean)
+SINGLE_UE = True # Same experiments but with just one UE (df_kpms_one_ue_latency_clean, df_iperf_one_ue_latency_clean, df_latency_one_ue_latency_clean)
 
 def load_dataframes():
     df_kpm = pd.read_pickle(f'./pickles/srsran_kpms/df_kpms_{TEST_NAME}.pkl')
@@ -135,10 +139,12 @@ def insert_bitrate_an_value_and_prb(df_kpm, df_iperf, df_latency):
     df_iperf['_time'] = pd.to_datetime(df_iperf['_time'])
 
     df_kpm['test_number'] = df_kpm['test_number'].astype(int)
-    df_kpm['ue_nr'] = df_kpm['ue_nr'].astype(int)
+    if multi_ue:
+        df_kpm['ue_nr'] = df_kpm['ue_nr'].astype(int)
 
     df_latency['test_number'] = df_latency['test_number'].astype(int)
-    df_latency['ue_nr'] = df_latency['ue_nr'].astype(int)
+    if multi_ue:
+        df_latency['ue_nr'] = df_latency['ue_nr'].astype(int)
     
     df_iperf = df_iperf.sort_values(by='_time')
 
@@ -262,6 +268,23 @@ def get_test_info(df_latency):
     
     return test_dict
 
+def combine_info_and_latencies(dict_info, dict_latencies):
+    combined_data = {}
+
+    for test_number, info in dict_info.items():
+        key = (info['bandwidth_required'], info['prb'])
+        if key not in combined_data:
+            combined_data[key] = {}
+
+        test_id = f'test_{test_number}'
+        if test_id in dict_latencies:
+            for noise, latency in dict_latencies[test_id].items():
+                if noise not in combined_data[key]:
+                    combined_data[key][noise] = np.array([], dtype=float)
+                combined_data[key][noise] = np.append(combined_data[key][noise], latency)
+
+    return combined_data
+
 def main():
     df_kpm, df_iperf, df_latency = load_dataframes()
     if SINGLE_UE is False:
@@ -280,7 +303,7 @@ def main():
 
             else:
                 ### Uncomment to generate metrics plots
-                #av_dict_per_prb_bitrate_and_an = srsRAN_data_treatment.get_metrics_per_bitrate_an_and_prb(df_kpm, df_iperf, df_latency)
+                #av_dict_per_prb_bitrate_and_an = srsRAN_data_treatment.get_metrics_per_bitrate_an_and_prb(df_kpm, df_iperf, df_latency, RANDOM_AN)
                 #print(av_dict_per_prb_bitrate_and_an)
                 #srsRAN_plots.plot_metrics_av_per_bitrate_an_prb(av_dict_per_prb_bitrate_and_an)
 
@@ -316,9 +339,10 @@ def main():
                     print(av_dict_per_prb_and_an)
                     srsRAN_plots.plot_metrics_av_per_bitrate_and_prb(av_dict_per_prb_and_an)
                 elif BITRATE_PRB_AND_AN:
-                    av_dict_per_prb_bitrate_and_an = srsRAN_data_treatment.get_metrics_per_bitrate_an_and_prb(df_kpm, df_iperf, df_latency)
+                    av_dict_per_prb_bitrate_and_an = srsRAN_data_treatment.get_metrics_per_bitrate_an_and_prb(df_kpm, df_iperf, df_latency, RANDOM_AN)
                     #print(av_dict_per_prb_bitrate_and_an)
-                    #srsRAN_plots.plot_metrics_av_per_bitrate_an_prb(av_dict_per_prb_bitrate_and_an)
+
+                    #srsRAN_plots.plot_metrics_av_per_bitrate_an_prb(av_dict_per_prb_bitrate_and_an, RANDOM_AN)
                     
                     ### Just to plot latency
                     #dict_latencies = srsRAN_data_treatment.generate_latency_arrays(df_latency)
@@ -326,8 +350,11 @@ def main():
 
                     ### Plot latency with noise
                     dict_info = get_test_info(df_latency)
-                    dict_latencies = srsRAN_data_treatment.generate_latency_arrays_with_noise(df_latency)
-                    srsRAN_plots.plot_latencies_box_plots_per_test(dict_latencies, dict_info)
+                    dict_latencies = srsRAN_data_treatment.generate_latency_arrays_with_noise(df_latency, RANDOM_AN)
+                    agg_dict_latencies = combine_info_and_latencies(dict_info, dict_latencies)
+
+                    #srsRAN_plots.plot_latencies_box_plots_per_test(dict_latencies, dict_info, RANDOM_AN)
+                    srsRAN_plots.plot_agg_latencies_box_plots(agg_dict_latencies)
 
 
 if __name__ == "__main__":
